@@ -240,7 +240,7 @@
                 <p class="text-slate-600 mb-8 max-w-3xl text-justify">
                     A frota do DER-DF é classificada em três categorias principais, cada uma com regras de uso, identificação e recolhimento específicas. Navegue pelas abas para conhecer as particularidades de cada tipo de veículo e os critérios para sua baixa e alienação.
                 </p>
-                <div class="mb-8">
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
                     <div class="border-b border-slate-200">
                         <nav class="-mb-px flex space-x-6 overflow-x-auto" aria-label="Tabs">
                             <button class="tab-btn border-amber-500 text-amber-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" data-tab="representacao">Representação</button>
@@ -248,9 +248,95 @@
                             <button class="tab-btn border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" data-tab="servico">Serviço</button>
                         </nav>
                     </div>
-                </div>
-                <div id="tab-content" class="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
-                    <!-- Content will be injected by JS -->
+
+                    <!-- Conteúdo das abas -->
+                    <div id="tab-content">
+                        <!-- Conteúdo da aba Representação -->
+                        <div class="tab-pane mt-8" data-tab-pane="representacao">
+                            <h3 class="text-xl font-semibold mb-4">I. Veículos de Representação</h3>
+                            <div class="tooltip-container" data-citation="Art. 2º, § 1º: 'Veículos de representação são aqueles destinados exclusivamente ao Presidente, aos titulares da Diretoria Colegiada e à Assessoria de Inteligência.'">
+                                <p class="mb-4 text-slate-600 text-justify"><strong>Uso:</strong> Restrito ao Presidente, titulares da Diretoria Colegiada e assessoria de inteligência.</p>
+                                <span class="tooltip-text"></span>
+                            </div>
+                            <ul class="list-disc pl-5 space-y-2 text-slate-600 text-justify">
+                                <li class="tooltip-container" data-citation="Art. 2º, § 2º: 'Poderão ter identificação visual dispensada, a critério da autoridade competente.'">
+                                    Podem ter identificação visual dispensada.
+                                    <span class="tooltip-text"></span>
+                                </li>
+                                <li class="tooltip-container" data-citation="Art. 8º, III: 'Estes veículos estão dispensados do recolhimento diário nas garagens da unidade de lotação.'">
+                                    Possuem exceção à regra de recolhimento diário nas unidades do DER-DF.
+                                    <span class="tooltip-text"></span>
+                                </li>
+                                <li class="tooltip-container" data-citation="Art. 10, § 2º: 'As cotas de combustível não se aplicam aos veículos de representação, dada a natureza de seu uso.'">
+                                    Não se aplicam os limites de cotas mensais de combustível a esta categoria.
+                                    <span class="tooltip-text"></span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Conteúdo da aba Transporte Institucional -->
+                        <div class="tab-pane mt-8 hidden" data-tab-pane="institucional">
+                            <h3 class="text-xl font-semibold mb-4">II. Veículos de Transporte Institucional</h3>
+                            <div class="tooltip-container" data-citation="Art. 3º, § 1º: 'Veículos de transporte institucional são utilizados para atividades de Fiscalização de Trânsito, Faixas de Domínio, operação e educação de trânsito.'">
+                                <p class="mb-4 text-slate-600 text-justify"><strong>Uso:</strong> Destinados a atividades de Fiscalização de Trânsito, Fiscalização de Faixas de Domínio, operação e educação de trânsito.</p>
+                                <span class="tooltip-text"></span>
+                            </div>
+                            <ul class="list-disc pl-5 space-y-2 text-slate-600 text-justify">
+                                <li class="tooltip-container" data-citation="Art. 3º, § 2º: 'Todos os veículos desta categoria, exceto os de representação, deverão ser identificados visualmente com adesivos conforme Anexo III.'">
+                                    Devem ser obrigatoriamente identificados visualmente com adesivos (Anexo III).
+                                    <span class="tooltip-text"></span>
+                                </li>
+                                <li class="tooltip-container" data-citation="Art. 10, § 4º: 'As viaturas de fiscalização e guinchos deverão ser abastecidas ao término de cada plantão.'">
+                                    Viaturas de fiscalização e guinchos devem ser abastecidas após cada plantão.
+                                    <span class="tooltip-text"></span>
+                                </li>
+                                <li class="tooltip-container" data-citation="Art. 10, § 5º: 'A cota de combustível não se aplica aos caminhões guinchos, em razão da sua utilização específica.'">
+                                    Caminhões guinchos não estão sujeitos aos limites de cotas mensais de combustível.
+                                    <span class="tooltip-text"></span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Conteúdo da aba Serviço -->
+                        <div class="tab-pane mt-8 hidden" data-tab-pane="servico">
+                            <h3 class="text-xl font-semibold mb-4">III. Veículos de Serviço</h3>
+                            <div class="tooltip-container" data-citation="Art. 4º: 'Veículos de serviço são aqueles empregados no transporte de materiais, equipamentos, insumos, bens móveis e no transporte de pessoal exclusivamente em serviço público.'">
+                                <p class="mb-4 text-slate-600 text-justify"><strong>Uso:</strong> Para transporte de materiais, equipamentos, insumos, bens móveis e transporte de pessoal exclusivamente em serviço público.</p>
+                                <span class="tooltip-text"></span>
+                            </div>
+                            <ul class="list-disc pl-5 space-y-2 text-slate-600 text-justify">
+                                <li class="tooltip-container" data-citation="Art. 4º, § 1º: 'Serão utilizados de modo compartilhado entre os setores, visando à otimização da frota.'">
+                                    Serão utilizados de modo compartilhado entre os setores.
+                                    <span class="tooltip-text"></span>
+                                </li>
+                                <li class="tooltip-container" data-citation="Art. 4º, § 2º: 'Todos os veículos de serviço, sejam próprios ou locados, deverão possuir identificação visual obrigatória.'">
+                                    Devem ser obrigatoriamente identificados visualmente (se da frota própria ou locados).
+                                    <span class="tooltip-text"></span>
+                                </li>
+                                <li class="tooltip-container" data-citation="Art. 8º, I: 'Os veículos de serviço devem ser recolhidos diariamente na unidade de lotação ao final do expediente. É proibido o pernoite em residências.'">
+                                    Devem ser recolhidos diariamente na unidade de lotação, sendo proibido o pernoite em residências.
+                                    <span class="tooltip-text"></span>
+                                </li>
+                            </ul>
+                            <div class="mt-6 pt-4 border-t border-slate-200">
+                                <h4 class="font-semibold text-slate-900 mb-2">Critérios para Baixa da Frota</h4>
+                                <div class="grid sm:grid-cols-2 gap-4 text-center">
+                                    <div class="bg-slate-50 p-4 rounded-lg tooltip-container" data-citation="Art. 25, I: 'Os veículos com mais de 4 rodas poderão ser baixados após atingirem 300.000 km rodados.'">
+                                        <p class="text-sm text-slate-500">Quilometragem</p>
+                                        <p class="text-2xl font-bold text-slate-800">300.000 km</p>
+                                        <p class="text-xs text-slate-500">(Veículos 4+ rodas)</p>
+                                        <span class="tooltip-text"></span>
+                                    </div>
+                                    <div class="bg-slate-50 p-4 rounded-lg tooltip-container" data-citation="Art. 25, II: 'O limite de idade para baixa de veículos movidos a gasolina ou diesel é de 10 a 12 anos, respectivamente.'">
+                                        <p class="text-sm text-slate-500">Tempo de Uso</p>
+                                        <p class="text-2xl font-bold text-slate-800">10-12 anos</p>
+                                        <p class="text-xs text-slate-500">(Gasolina/Diesel)</p>
+                                        <span class="tooltip-text"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -461,7 +547,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // ---- Lógica da navegação (mantida) ----
+            // ---- Lógica da navegação ----
             const mainContent = document.getElementById('main-content');
             const normaCompletaContent = document.getElementById('norma-completa-content');
             const navLinks = document.querySelectorAll('nav a');
@@ -481,7 +567,7 @@
             showContentBasedOnHash();
             window.addEventListener('hashchange', showContentBasedOnHash);
 
-            // ---- Lógica dos botões de Deveres e Proibições (mantida) ----
+            // ---- Lógica dos botões de Deveres e Proibições ----
             const btnDeveres = document.getElementById('btn-deveres');
             const btnProibicoes = document.getElementById('btn-proibicoes');
             const contentDeveres = document.getElementById('content-deveres');
@@ -503,110 +589,15 @@
                     btnDeveres.classList.add('bg-slate-200', 'text-slate-700');
                     btnDeveres.classList.remove('bg-amber-500', 'text-white');
                 }
-                attachTooltipEvents(); // Re-anexa eventos após a troca de conteúdo
+                attachTooltipEvents();
             }
             
             btnDeveres.addEventListener('click', () => toggleRules(true));
             btnProibicoes.addEventListener('click', () => toggleRules(false));
 
-            // ---- Lógica das abas (CORRIGIDA) ----
+            // ---- Lógica das abas de Veículos ----
             const tabButtons = document.querySelectorAll('.tab-btn');
-            const tabContentContainer = document.getElementById('tab-content');
-
-            const tabData = {
-                representacao: {
-                    title: 'I. Veículos de Representação',
-                    content: `
-                        <div class="tooltip-container" data-citation="Art. 2º, § 1º: 'Veículos de representação são aqueles destinados exclusivamente ao Presidente, aos titulares da Diretoria Colegiada e à Assessoria de Inteligência.'">
-                            <p class="mb-4 text-slate-600 text-justify"><strong>Uso:</strong> Restrito ao Presidente, titulares da Diretoria Colegiada e assessoria de inteligência.</p>
-                            <span class="tooltip-text"></span>
-                        </div>
-                        <ul class="list-disc pl-5 space-y-2 text-slate-600 text-justify">
-                            <li class="tooltip-container" data-citation="Art. 2º, § 2º: 'Poderão ter identificação visual dispensada, a critério da autoridade competente.'">
-                                Podem ter identificação visual dispensada.
-                                <span class="tooltip-text"></span>
-                            </li>
-                            <li class="tooltip-container" data-citation="Art. 8º, III: 'Estes veículos estão dispensados do recolhimento diário nas garagens da unidade de lotação.'">
-                                Possuem exceção à regra de recolhimento diário nas unidades do DER-DF.
-                                <span class="tooltip-text"></span>
-                            </li>
-                            <li class="tooltip-container" data-citation="Art. 10, § 2º: 'As cotas de combustível não se aplicam aos veículos de representação, dada a natureza de seu uso.'">
-                                Não se aplicam os limites de cotas mensais de combustível a esta categoria.
-                                <span class="tooltip-text"></span>
-                            </li>
-                        </ul>
-                    `
-                },
-                institucional: {
-                    title: 'II. Veículos de Transporte Institucional',
-                    content: `
-                        <div class="tooltip-container" data-citation="Art. 3º, § 1º: 'Veículos de transporte institucional são utilizados para atividades de Fiscalização de Trânsito, Faixas de Domínio, operação e educação de trânsito.'">
-                            <p class="mb-4 text-slate-600 text-justify"><strong>Uso:</strong> Destinados a atividades de Fiscalização de Trânsito, Fiscalização de Faixas de Domínio, operação e educação de trânsito.</p>
-                            <span class="tooltip-text"></span>
-                        </div>
-                        <ul class="list-disc pl-5 space-y-2 text-slate-600 text-justify">
-                            <li class="tooltip-container" data-citation="Art. 3º, § 2º: 'Todos os veículos desta categoria, exceto os de representação, deverão ser identificados visualmente com adesivos conforme Anexo III.'">
-                                Devem ser obrigatoriamente identificados visualmente com adesivos (Anexo III).
-                                <span class="tooltip-text"></span>
-                            </li>
-                            <li class="tooltip-container" data-citation="Art. 10, § 4º: 'As viaturas de fiscalização e guinchos deverão ser abastecidas ao término de cada plantão.'">
-                                Viaturas de fiscalização e guinchos devem ser abastecidas após cada plantão.
-                                <span class="tooltip-text"></span>
-                            </li>
-                            <li class="tooltip-container" data-citation="Art. 10, § 5º: 'A cota de combustível não se aplica aos caminhões guinchos, em razão da sua utilização específica.'">
-                                Caminhões guinchos não estão sujeitos aos limites de cotas mensais de combustível.
-                                <span class="tooltip-text"></span>
-                            </li>
-                        </ul>
-                    `
-                },
-                servico: {
-                    title: 'III. Veículos de Serviço',
-                    content: `
-                        <div class="tooltip-container" data-citation="Art. 4º: 'Veículos de serviço são aqueles empregados no transporte de materiais, equipamentos, insumos, bens móveis e no transporte de pessoal exclusivamente em serviço público.'">
-                            <p class="mb-4 text-slate-600 text-justify"><strong>Uso:</strong> Para transporte de materiais, equipamentos, insumos, bens móveis e transporte de pessoal exclusivamente em serviço público.</p>
-                            <span class="tooltip-text"></span>
-                        </div>
-                        <ul class="list-disc pl-5 space-y-2 text-slate-600 text-justify">
-                            <li class="tooltip-container" data-citation="Art. 4º, § 1º: 'Serão utilizados de modo compartilhado entre os setores, visando à otimização da frota.'">
-                                Serão utilizados de modo compartilhado entre os setores.
-                                <span class="tooltip-text"></span>
-                            </li>
-                            <li class="tooltip-container" data-citation="Art. 4º, § 2º: 'Todos os veículos de serviço, sejam próprios ou locados, deverão possuir identificação visual obrigatória.'">
-                                Devem ser obrigatoriamente identificados visualmente (se da frota própria ou locados).
-                                <span class="tooltip-text"></span>
-                            </li>
-                            <li class="tooltip-container" data-citation="Art. 8º, I: 'Os veículos de serviço devem ser recolhidos diariamente na unidade de lotação ao final do expediente. É proibido o pernoite em residências.'">
-                                Devem ser recolhidos diariamente na unidade de lotação, sendo proibido o pernoite em residências.
-                                <span class="tooltip-text"></span>
-                            </li>
-                        </ul>
-                        <div class="mt-6 pt-4 border-t border-slate-200">
-                           <h4 class="font-semibold text-slate-900 mb-2">Critérios para Baixa da Frota</h4>
-                           <div class="grid sm:grid-cols-2 gap-4 text-center">
-                               <div class="bg-slate-50 p-4 rounded-lg tooltip-container" data-citation="Art. 25, I: 'Os veículos com mais de 4 rodas poderão ser baixados após atingirem 300.000 km rodados.'">
-                                   <p class="text-sm text-slate-500">Quilometragem</p>
-                                   <p class="text-2xl font-bold text-slate-800">300.000 km</p>
-                                   <p class="text-xs text-slate-500">(Veículos 4+ rodas)</p>
-                                   <span class="tooltip-text"></span>
-                               </div>
-                               <div class="bg-slate-50 p-4 rounded-lg tooltip-container" data-citation="Art. 25, II: 'O limite de idade para baixa de veículos movidos a gasolina ou diesel é de 10 a 12 anos, respectivamente.'">
-                                   <p class="text-sm text-slate-500">Tempo de Uso</p>
-                                   <p class="text-2xl font-bold text-slate-800">10-12 anos</p>
-                                   <p class="text-xs text-slate-500">(Gasolina/Diesel)</p>
-                                   <span class="tooltip-text"></span>
-                               </div>
-                           </div>
-                        </div>
-                    `
-                }
-            };
-
-            function updateTabContent(tabKey) {
-                const data = tabData[tabKey];
-                tabContentContainer.innerHTML = `<h3 class="text-xl font-semibold mb-4">${data.title}</h3>${data.content}`;
-                attachTooltipEvents();
-            }
+            const tabContents = document.querySelectorAll('.tab-pane');
 
             tabButtons.forEach(button => {
                 button.addEventListener('click', () => {
@@ -614,22 +605,27 @@
                         btn.classList.remove('border-amber-500', 'text-amber-600');
                         btn.classList.add('border-transparent', 'text-slate-500', 'hover:text-slate-700', 'hover:border-slate-300');
                     });
+                    
                     button.classList.add('border-amber-500', 'text-amber-600');
                     button.classList.remove('border-transparent', 'text-slate-500', 'hover:text-slate-700', 'hover:border-slate-300');
-                    updateTabContent(button.dataset.tab);
+                    
+                    tabContents.forEach(content => {
+                        content.classList.add('hidden');
+                    });
+                    
+                    const activeTabId = button.dataset.tab;
+                    const activeTabContent = document.querySelector(`.tab-pane[data-tab-pane="${activeTabId}"]`);
+                    activeTabContent.classList.remove('hidden');
+                    attachTooltipEvents();
                 });
             });
 
-            // CORRIGIDO: Carrega o conteúdo da primeira aba ao iniciar para evitar o problema de "texto expandido"
-            updateTabContent('representacao');
-
-            // Corrigido: Lógica dos tooltips
+            // ---- Lógica dos tooltips ----
             function attachTooltipEvents() {
                 let activeTooltip = null;
 
                 const tooltipContainers = document.querySelectorAll('.tooltip-container');
                 tooltipContainers.forEach(container => {
-                    // Remover listeners antigos para evitar duplicação
                     container.removeEventListener('click', handleTooltipClick);
                     container.removeEventListener('mouseenter', handleTooltipEnter);
                     container.removeEventListener('mouseleave', handleTooltipLeave);
@@ -638,7 +634,6 @@
                     const citation = container.getAttribute('data-citation');
                     tooltipText.textContent = citation;
                     
-                    // Adicionar novos listeners
                     container.addEventListener('click', handleTooltipClick);
                     container.addEventListener('mouseenter', handleTooltipEnter);
                     container.addEventListener('mouseleave', handleTooltipLeave);
@@ -689,7 +684,7 @@
                 });
             }
 
-            // ---- Lógica do gráfico (mantida) ----
+            // ---- Lógica do gráfico ----
             const ctx = document.getElementById('fuelChart').getContext('2d');
             new Chart(ctx, {
                 type: 'bar',
@@ -733,7 +728,6 @@
             });
 
             // Chama a função para anexar os eventos de tooltip
-            // na carga inicial da página
             attachTooltipEvents();
         });
     </script>
