@@ -10,14 +10,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Chosen Palette: Slate & Amber -->
-    <!-- Application Structure Plan: A single-page dashboard with a sticky top navigation bar for quick access to thematic sections (Visão Geral, Regras Essenciais, Veículos, Condutor, Processos). This structure is task-oriented, allowing users to quickly find specific information (e.g., prohibitions, authorization steps) rather than navigating a linear slide deck. Interactive elements like tabs for vehicle categories and toggles for duties/prohibitions reduce cognitive load and improve usability. The new "Scenario Assistant" section uses the Gemini API to provide personalized guidance based on the document's content, further enhancing the app's utility as a practical reference tool. -->
+    <!-- Application Structure Plan: A single-page dashboard with a sticky top navigation bar for quick access to thematic sections (Visão Geral, Regras Essenciais, Veículos, Condutor, Processos). This structure is task-oriented, allowing users to quickly find specific information (e.g., prohibitions, authorization steps) rather than navigating a linear slide deck. Interactive elements like tabs for vehicle categories and toggles for duties/prohibitions reduce cognitive load and improve usability. -->
     <!-- Visualization & Content Choices:
         - Fuel Quotas: Report Info -> Compare quotas. Goal -> Inform. Viz/Method -> Horizontal Bar Chart (Chart.js). Interaction -> Tooltips. Justification -> Faster comprehension than text.
         - Authorization Process: Report Info -> 5 steps to get authorized. Goal -> Instruct. Viz/Method -> HTML/CSS vertical step-flow diagram. Interaction -> Hover effects. Justification -> More intuitive than a simple list for a process.
         - Duties vs. Prohibitions: Report Info -> Lists of allowed/disallowed actions. Goal -> Compare/Inform. Viz/Method -> Two-column toggleable lists with icons. Interaction -> Click to show/hide lists. Justification -> Reduces information overload and provides focused answers.
         - Vehicle Categories: Report Info -> Rules for 3 vehicle types. Goal -> Organize/Compare. Viz/Method -> Tabbed interface. Interaction -> Click to switch content. Justification -> Hides irrelevant information, allowing users to focus on their specific vehicle type.
         - Disposal Criteria: Report Info -> Km and age limits. Goal -> Inform. Viz/Method -> Styled info cards. Interaction -> None. Justification -> Highlights key numbers for quick reference.
-        - Scenario Assistant: Report Info -> All rules and guidelines. Goal -> Provide contextualized advice. Viz/Method -> Text input and output with LLM (Gemini API). Interaction -> User types scenario, clicks button, receives text response. Justification -> Aims to answer complex, real-world questions that aren't explicitly addressed in a simple list or chart.
     -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
@@ -73,7 +72,6 @@
                         <a href="#veiculos" class="text-slate-600 hover:bg-slate-100 hover:text-slate-900 px-3 py-2 rounded-md text-sm font-medium">Veículos</a>
                         <a href="#condutor" class="text-slate-600 hover:bg-slate-100 hover:text-slate-900 px-3 py-2 rounded-md text-sm font-medium">O Condutor</a>
                         <a href="#processos" class="text-slate-600 hover:bg-slate-100 hover:text-slate-900 px-3 py-2 rounded-md text-sm font-medium">Processos</a>
-                        <a href="#assistente" class="text-slate-600 hover:bg-slate-100 hover:text-slate-900 px-3 py-2 rounded-md text-sm font-medium">Assistente ✨</a>
                     </div>
                 </div>
             </div>
@@ -233,35 +231,14 @@
             </div>
         </section>
 
-        <hr class="my-16 border-slate-200">
-
-        <section id="assistente" class="mb-16 scroll-mt-20">
-            <h2 class="text-3xl font-bold text-slate-900 mb-4">Assistente de Cenários ✨</h2>
-            <p class="text-slate-600 mb-8 max-w-3xl text-justify">
-                Descreva uma situação ou faça uma pergunta sobre as regras da frota. O assistente de IA irá analisar o contexto da Instrução Normativa e fornecer a melhor orientação possível.
-            </p>
-            <div class="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
-                <textarea id="scenario-input" rows="4" class="w-full p-3 rounded-md border border-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm" placeholder="Ex: 'O que devo fazer em caso de um acidente durante o horário de serviço?'"></textarea>
-                <div class="mt-4 flex justify-end items-center">
-                    <div id="loading-indicator" class="hidden flex items-center text-slate-500 text-sm">
-                        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-slate-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        Analisando...
-                    </div>
-                    <button id="send-scenario-btn" class="bg-amber-500 text-white px-6 py-2 rounded-md font-semibold shadow-sm hover:bg-amber-600 transition-colors">Obter Orientação ✨</button>
-                </div>
-                <div id="scenario-output" class="mt-6 p-4 rounded-md bg-slate-50 border border-slate-200 text-slate-700 hidden"></div>
-            </div>
-        </section>
-
     </main>
 
     <footer class="bg-slate-800 text-white">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
             <p class="font-semibold mb-2">É obrigação de todo servidor conhecer e cumprir esta norma.</p>
             <p class="text-sm text-slate-300">O descumprimento pode resultar em sanções disciplinares.</p>
+            <!-- Adicionando a linha de copyright conforme solicitado -->
+            <p class="text-xs text-slate-400 mt-4">© 2025 Produzido por Renan</p>
         </div>
     </footer>
 
@@ -273,10 +250,6 @@
             const contentProibicoes = document.getElementById('content-proibicoes');
             const tabButtons = document.querySelectorAll('.tab-btn');
             const tabContentContainer = document.getElementById('tab-content');
-            const scenarioInput = document.getElementById('scenario-input');
-            const sendScenarioBtn = document.getElementById('send-scenario-btn');
-            const scenarioOutput = document.getElementById('scenario-output');
-            const loadingIndicator = document.getElementById('loading-indicator');
 
             btnDeveres.addEventListener('click', () => {
                 contentDeveres.classList.remove('hidden');
@@ -422,100 +395,6 @@
                             }
                         }
                     }
-                }
-            });
-
-            // Gemini API Integration - Refactored with a different model for improved stability.
-            const documentContent = `
-            Instrução Normativa Nº 08/2025 - DER-DF.
-            Visão Geral (ID:visao-geral): Propósito é disciplinar o uso da frota para fins institucionais. O uso é exclusivo para atividades de serviço. Toda utilização exige autorização e registro.
-            Regras Essenciais (ID:regras-essenciais):
-            Deveres: Manter veículo limpo, verificar níveis, comunicar problemas, solicitar perícia em sinistro, usar cinto, preencher guia de autorização.
-            Proibições: Usar para fins particulares, transportar familiares, ceder a direção, conduzir embriagado, recolher veículo em garagem residencial, dirigir com trajes inadequados.
-            Veículos (ID:veiculos):
-            I. Veículos de Representação: Uso restrito à Diretoria. Identificação visual dispensada. Não precisam recolher diariamente. Não tem cota de combustível.
-            II. Veículos de Transporte Institucional: Uso em fiscalização e operações. Identificação obrigatória. Abastecimento após plantão (viaturas/guinchos). Guinchos não têm cota.
-            III. Veículos de Serviço: Uso compartilhado para transporte de materiais e pessoal em serviço. Identificação obrigatória. Recolhimento diário obrigatório em unidade do DER-DF. Critérios de baixa: 300.000 km ou 10-12 anos de uso.
-            Condutor (ID:condutor):
-            Processo de Autorização: 1. Preencher Anexo I e II; 2. Assinar com a chefia; 3. Apresentar CNH; 4. Análise pela Superintendência.
-            Infrações e Sinistros: Condutor responsável por multas. Pode ser responsabilizado por custos de sinistro se for por mau uso/imprudência.
-            Processos (ID:processos):
-            Abastecimento: Cartão magnético em postos credenciados, dados pessoais e intransferíveis.
-            Manutenção: Unidade de lotação do veículo é responsável por encaminhá-lo para as revisões na Diretoria de Manutenção, respeitando os prazos de quilometragem ou tempo.
-            `;
-
-            sendScenarioBtn.addEventListener('click', async () => {
-                const prompt = scenarioInput.value.trim();
-                if (!prompt) {
-                    scenarioOutput.innerHTML = '<p class="text-red-500">Por favor, digite um cenário ou uma pergunta.</p>';
-                    scenarioOutput.classList.remove('hidden');
-                    return;
-                }
-
-                scenarioOutput.classList.add('hidden');
-                loadingIndicator.classList.remove('hidden');
-                sendScenarioBtn.disabled = true;
-
-                const fullPrompt = `Você é um assistente de IA focado em fornecer orientações precisas com base no seguinte documento da Instrução Normativa 08/2025 do DER-DF. Use apenas as informações fornecidas e não adicione informações externas. Responda de forma clara, objetiva e em português.
-
-Documento de Referência:
-"""
-${documentContent}
-"""
-
-Cenário ou Pergunta do usuário:
-"""
-${prompt}
-"""
-
-Responda apenas com a orientação baseada no documento.`;
-
-                const callApiWithRetry = async (retries = 3, delay = 1000) => {
-                    try {
-                        const chatHistory = [{ role: "user", parts: [{ text: fullPrompt }] }];
-                        const payload = { contents: chatHistory };
-                        const apiKey = "";
-                        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-preview-0514:generateContent?key=${apiKey}`; // Changed to a more stable model.
-
-                        const response = await fetch(apiUrl, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(payload)
-                        });
-
-                        if (!response.ok) {
-                            throw new Error(`Erro na API: ${response.status} ${response.statusText}`);
-                        }
-
-                        const result = await response.json();
-                        const text = result?.candidates?.[0]?.content?.parts?.[0]?.text;
-
-                        if (text) {
-                            scenarioOutput.innerHTML = `<p>${text}</p>`;
-                            scenarioOutput.classList.remove('hidden');
-                        } else {
-                            scenarioOutput.innerHTML = '<p class="text-red-500">Não foi possível obter uma resposta. Ocorreu um erro no formato da resposta da IA.</p>';
-                            scenarioOutput.classList.remove('hidden');
-                        }
-                    } catch (error) {
-                        console.error('Erro ao chamar a API:', error);
-                        if (retries > 0) {
-                            await new Promise(resolve => setTimeout(resolve, delay));
-                            await callApiWithRetry(retries - 1, delay * 2);
-                        } else {
-                            throw error;
-                        }
-                    }
-                };
-
-                try {
-                    await callApiWithRetry();
-                } catch (finalError) {
-                    scenarioOutput.innerHTML = `<p class="text-red-500">Ocorreu um erro grave e o serviço de IA parece estar indisponível no momento. Por favor, tente novamente mais tarde.</p>`;
-                    scenarioOutput.classList.remove('hidden');
-                } finally {
-                    loadingIndicator.classList.add('hidden');
-                    sendScenarioBtn.disabled = false;
                 }
             });
         });
