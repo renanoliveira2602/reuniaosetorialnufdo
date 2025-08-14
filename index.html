@@ -425,7 +425,7 @@
                 }
             });
 
-            // Gemini API Integration - Code has been updated for better robustness and error handling.
+            // Gemini API Integration - Refactored for maximum robustness.
             const documentContent = `
             Instrução Normativa Nº 08/2025 - DER-DF.
             Visão Geral (ID:visao-geral): Propósito é disciplinar o uso da frota para fins institucionais. O uso é exclusivo para atividades de serviço. Toda utilização exige autorização e registro.
@@ -470,14 +470,9 @@ ${prompt}
 
 Responda apenas com a orientação baseada no documento.`;
 
-                let delay = 1000; // 1 second
-                const maxRetries = 3;
-
-                for (let i = 0; i < maxRetries; i++) {
+                const callApiWithRetry = async (retries = 3, delay = 1000) => {
                     try {
-                        let chatHistory = [];
-                        chatHistory.push({ role: "user", parts: [{ text: fullPrompt }] });
-
+                        const chatHistory = [{ role: "user", parts: [{ text: fullPrompt }] }];
                         const payload = { contents: chatHistory };
                         const apiKey = "";
                         const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
@@ -489,13 +484,7 @@ Responda apenas com a orientação baseada no documento.`;
                         });
 
                         if (!response.ok) {
-                            if (response.status === 429 && i < maxRetries - 1) {
-                                // Too many requests, try again
-                                await new Promise(resolve => setTimeout(resolve, delay));
-                                delay *= 2; // Exponential backoff
-                                continue;
-                            }
-                            throw new Error(`Erro na API: ${response.statusText}`);
+                            throw new Error(`Erro na API: ${response.status} ${response.statusText}`);
                         }
 
                         const result = await response.json();
@@ -503,26 +492,30 @@ Responda apenas com a orientação baseada no documento.`;
 
                         if (text) {
                             scenarioOutput.innerHTML = `<p>${text}</p>`;
+                            scenarioOutput.classList.remove('hidden');
                         } else {
                             scenarioOutput.innerHTML = '<p class="text-red-500">Não foi possível obter uma resposta. Ocorreu um erro no formato da resposta da IA.</p>';
+                            scenarioOutput.classList.remove('hidden');
                         }
-
-                        scenarioOutput.classList.remove('hidden');
-                        break; // Exit the loop on success
-
                     } catch (error) {
                         console.error('Erro ao chamar a API:', error);
-                        if (i === maxRetries - 1) {
-                             scenarioOutput.innerHTML = `<p class="text-red-500">Ocorreu um erro ao processar sua solicitação após várias tentativas. Por favor, tente novamente mais tarde.</p>`;
-                             scenarioOutput.classList.remove('hidden');
-                        } else {
+                        if (retries > 0) {
                             await new Promise(resolve => setTimeout(resolve, delay));
-                            delay *= 2;
+                            await callApiWithRetry(retries - 1, delay * 2);
+                        } else {
+                            throw error;
                         }
-                    } finally {
-                        loadingIndicator.classList.add('hidden');
-                        sendScenarioBtn.disabled = false;
                     }
+                };
+
+                try {
+                    await callApiWithRetry();
+                } catch (finalError) {
+                    scenarioOutput.innerHTML = `<p class="text-red-500">Ocorreu um erro grave e o serviço de IA parece estar indisponível no momento. Por favor, tente novamente mais tarde.</p>`;
+                    scenarioOutput.classList.remove('hidden');
+                } finally {
+                    loadingIndicator.classList.add('hidden');
+                    sendScenarioBtn.disabled = false;
                 }
             });
         });
