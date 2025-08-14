@@ -425,7 +425,7 @@
                 }
             });
 
-            // Gemini API Integration - Refactored for maximum robustness.
+            // Gemini API Integration - Refactored with a different model for improved stability.
             const documentContent = `
             Instrução Normativa Nº 08/2025 - DER-DF.
             Visão Geral (ID:visao-geral): Propósito é disciplinar o uso da frota para fins institucionais. O uso é exclusivo para atividades de serviço. Toda utilização exige autorização e registro.
@@ -475,7 +475,7 @@ Responda apenas com a orientação baseada no documento.`;
                         const chatHistory = [{ role: "user", parts: [{ text: fullPrompt }] }];
                         const payload = { contents: chatHistory };
                         const apiKey = "";
-                        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+                        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-preview-0514:generateContent?key=${apiKey}`; // Changed to a more stable model.
 
                         const response = await fetch(apiUrl, {
                             method: 'POST',
