@@ -9,16 +9,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: Slate & Amber -->
-    <!-- Application Structure Plan: A single-page dashboard with a sticky top navigation bar for quick access to thematic sections (Visão Geral, Regras Essenciais, Veículos, Condutor, Processos). This structure is task-oriented, allowing users to quickly find specific information (e.g., prohibitions, authorization steps) rather than navigating a linear slide deck. Interactive elements like tabs for vehicle categories and toggles for duties/prohibitions reduce cognitive load and improve usability. -->
-    <!-- Visualization & Content Choices:
-        - Fuel Quotas: Report Info -> Compare quotas. Goal -> Inform. Viz/Method -> Horizontal Bar Chart (Chart.js). Interaction -> Tooltips. Justification -> Faster comprehension than text.
-        - Authorization Process: Report Info -> 5 steps to get authorized. Goal -> Instruct. Viz/Method -> HTML/CSS vertical step-flow diagram. Interaction -> Hover effects. Justification -> More intuitive than a simple list for a process.
-        - Duties vs. Prohibitions: Report Info -> Lists of allowed/disallowed actions. Goal -> Compare/Inform. Viz/Method -> Two-column toggleable lists with icons. Interaction -> Click to show/hide lists. Justification -> Reduces information overload and provides focused answers.
-        - Vehicle Categories: Report Info -> Rules for 3 vehicle types. Goal -> Organize/Compare. Viz/Method -> Tabbed interface. Interaction -> Click to switch content. Justification -> Hides irrelevant information, allowing users to focus on their specific vehicle type.
-        - Disposal Criteria: Report Info -> Km and age limits. Goal -> Inform. Viz/Method -> Styled info cards. Interaction -> None. Justification -> Highlights key numbers for quick reference.
-    -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -55,6 +45,81 @@
         .link-to-section:hover {
             background-color: #d97706; /* amber-600 */
         }
+        .tooltip-container {
+            position: relative;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .tooltip-text {
+            visibility: hidden;
+            background-color: #1e293b; /* slate-800 */
+            color: #fff;
+            text-align: left;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 10;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -150px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            width: 300px;
+            font-size: 0.75rem;
+            line-height: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #1e293b transparent transparent transparent;
+        }
+        /* Mobile specific styling and positioning */
+        @media (max-width: 767px) {
+            .tooltip-text {
+                width: 90vw;
+                left: 50%;
+                transform: translateX(-50%);
+                bottom: auto;
+                top: 100%;
+                margin-top: 10px;
+                margin-left: 0;
+            }
+            .tooltip-text::after {
+                top: -5px;
+                left: 50%;
+                margin-left: -5px;
+                border-color: transparent transparent #1e293b transparent;
+            }
+        }
+        /* Custom styles for the full text page */
+        .norma-completa h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        .norma-completa h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .norma-completa h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .norma-completa p {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
     </style>
 </head>
 <body class="text-slate-800">
@@ -67,11 +132,8 @@
                 </div>
                 <div class="hidden md:block">
                     <div class="ml-10 flex items-baseline space-x-4">
-                        <a href="#visao-geral" class="text-slate-600 hover:bg-slate-100 hover:text-slate-900 px-3 py-2 rounded-md text-sm font-medium">Visão Geral</a>
-                        <a href="#regras-essenciais" class="text-slate-600 hover:bg-slate-100 hover:text-slate-900 px-3 py-2 rounded-md text-sm font-medium">Regras Essenciais</a>
-                        <a href="#veiculos" class="text-slate-600 hover:bg-slate-100 hover:text-slate-900 px-3 py-2 rounded-md text-sm font-medium">Veículos</a>
-                        <a href="#condutor" class="text-slate-600 hover:bg-slate-100 hover:text-slate-900 px-3 py-2 rounded-md text-sm font-medium">O Condutor</a>
-                        <a href="#processos" class="text-slate-600 hover:bg-slate-100 hover:text-slate-900 px-3 py-2 rounded-md text-sm font-medium">Processos</a>
+                        <a href="#inicio" class="text-slate-600 hover:bg-slate-100 hover:text-slate-900 px-3 py-2 rounded-md text-sm font-medium">Guia Interativo</a>
+                        <a href="#norma-completa" class="text-slate-600 hover:bg-slate-100 hover:text-slate-900 px-3 py-2 rounded-md text-sm font-medium">Texto Integral da Norma</a>
                     </div>
                 </div>
             </div>
@@ -79,177 +141,356 @@
     </header>
 
     <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
-
-        <section id="visao-geral" class="mb-16 scroll-mt-20">
-            <h2 class="text-3xl font-bold text-slate-900 mb-4">Uso da Frota Oficial: Visão Geral</h2>
-            <p class="text-slate-600 mb-8 max-w-3xl text-justify">
-                Esta seção apresenta o propósito da Instrução Normativa 08/2025 e os princípios fundamentais que todos os servidores devem seguir. O objetivo é garantir que o uso dos veículos públicos seja feito de forma padronizada, eficiente e estritamente para fins institucionais, assegurando a correta gestão do patrimônio do DER-DF.
-            </p>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
-                    <h3 class="font-semibold text-slate-900 mb-2">🎯 Propósito da Norma</h3>
-                    <p class="text-sm text-slate-600 text-justify">Disciplinar, padronizar e garantir o uso eficiente e seguro de toda a frota oficial do DER-DF, incluindo veículos, máquinas e equipamentos.</p>
+        <!-- Main content of the interactive guide -->
+        <div id="main-content">
+            <section id="visao-geral" class="mb-16 scroll-mt-20">
+                <h2 class="text-3xl font-bold text-slate-900 mb-4">Uso da Frota Oficial: Visão Geral</h2>
+                <p class="text-slate-600 mb-8 max-w-3xl text-justify">
+                    Esta seção apresenta o propósito da Instrução Normativa 08/2025 e os princípios fundamentais que todos os servidores devem seguir. O objetivo é garantir que o uso dos veículos públicos seja feito de forma padronizada, eficiente e estritamente para fins institucionais, assegurando a correta gestão do patrimônio do DER-DF.
+                </p>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
+                        <h3 class="font-semibold text-slate-900 mb-2">🎯 Propósito da Norma</h3>
+                        <p class="text-sm text-slate-600 text-justify">Disciplinar, padronizar e garantir o uso eficiente e seguro de toda a frota oficial do DER-DF, incluindo veículos, máquinas e equipamentos.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
+                        <h3 class="font-semibold text-slate-900 mb-2">🏢 Uso Exclusivo Institucional</h3>
+                        <p class="text-sm text-slate-600 text-justify">A utilização dos veículos é restrita a atividades de serviço e ao desempenho de funções oficiais. Qualquer uso para fins particulares é estritamente proibido.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
+                        <h3 class="font-semibold text-slate-900 mb-2">✍️ Autorização e Registro</h3>
+                        <p class="text-sm text-slate-600 text-justify">Toda utilização exige solicitação formal prévia e aprovação. Além disso, todos os deslocamentos devem ser devidamente registrados em sistema de controle.</p>
+                    </div>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
-                    <h3 class="font-semibold text-slate-900 mb-2">🏢 Uso Exclusivo Institucional</h3>
-                    <p class="text-sm text-slate-600 text-justify">A utilização dos veículos é restrita a atividades de serviço e ao desempenho de funções oficiais. Qualquer uso para fins particulares é estritamente proibido.</p>
+            </section>
+
+            <hr class="my-16 border-slate-200">
+
+            <section id="regras-essenciais" class="mb-16 scroll-mt-20">
+                <h2 class="text-3xl font-bold text-slate-900 mb-4">Regras Essenciais: Deveres e Proibições</h2>
+                <p class="text-slate-600 mb-8 max-w-3xl text-justify">
+                    Para facilitar a consulta rápida, esta seção resume as responsabilidades e as restrições mais importantes para o condutor. Use os botões abaixo para alternar entre a lista de deveres obrigatórios e a lista de ações que são expressamente proibidas ao utilizar um veículo oficial.
+                </p>
+                <div class="flex space-x-4 mb-8">
+                    <button id="btn-deveres" class="bg-amber-500 text-white px-6 py-2 rounded-md font-semibold shadow-sm hover:bg-amber-600 transition-colors">Deveres do Condutor</button>
+                    <button id="btn-proibicoes" class="bg-slate-200 text-slate-700 px-6 py-2 rounded-md font-semibold hover:bg-slate-300 transition-colors">Proibições</button>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
-                    <h3 class="font-semibold text-slate-900 mb-2">✍️ Autorização e Registro</h3>
-                    <p class="text-sm text-slate-600 text-justify">Toda utilização exige solicitação formal prévia e aprovação. Além disso, todos os deslocamentos devem ser devidamente registrados em sistema de controle.</p>
+
+                <div id="content-deveres" class="grid md:grid-cols-2 gap-4">
+                    <!-- Deveres -->
+                    <div class="bg-white p-4 rounded-lg flex items-start space-x-3 tooltip-container" data-citation="Art. 5º, § 2º: 'É dever do condutor manter o veículo limpo e em bom estado de conservação.'">
+                        <span class="text-green-500 font-bold text-xl">✓</span><p class="text-sm text-justify">Manter o veículo limpo e conservado.</p>
+                        <span class="tooltip-text"></span>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg flex items-start space-x-3 tooltip-container" data-citation="Art. 5º, § 1º: 'O condutor deverá verificar, diariamente antes da saída, os níveis de óleo, água, a calibragem dos pneus e o estado dos freios.'">
+                        <span class="text-green-500 font-bold text-xl">✓</span><p class="text-sm text-justify">Verificar diariamente níveis de óleo, água, pneus e freios.</p>
+                        <span class="tooltip-text"></span>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg flex items-start space-x-3 tooltip-container" data-citation="Art. 6º, § 3º: 'Qualquer defeito ou anomalia no veículo deverá ser comunicada imediatamente à Gerência de Transporte para as providências cabíveis.'">
+                        <span class="text-green-500 font-bold text-xl">✓</span><p class="text-sm text-justify">Comunicar imediatamente qualquer problema à Gerência de Transporte.</p>
+                        <span class="tooltip-text"></span>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg flex items-start space-x-3 tooltip-container" data-citation="Art. 18, I: 'Em caso de sinistro, o condutor deve solicitar perícia policial no local e informar imediatamente a Gerência de Transporte.'">
+                        <span class="text-green-500 font-bold text-xl">✓</span><p class="text-sm text-justify">Em caso de sinistro, solicitar perícia policial.</p>
+                        <span class="tooltip-text"></span>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg flex items-start space-x-3 tooltip-container" data-citation="Art. 5º, § 4º: 'O uso do cinto de segurança é obrigatório para o condutor e todos os passageiros.'">
+                        <span class="text-green-500 font-bold text-xl">✓</span><p class="text-sm text-justify">Usar cinto de segurança e exigir que os passageiros usem.</p>
+                        <span class="tooltip-text"></span>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg flex items-start space-x-3 tooltip-container" data-citation="Art. 12, § 1º: 'É obrigatório o preenchimento da Guia de Autorização e Movimentação de Veículos (Anexo VI) antes de qualquer deslocamento.'">
+                        <span class="text-green-500 font-bold text-xl">✓</span><p class="text-sm text-justify">Preencher a Guia de Autorização e Movimentação de Veículos.</p>
+                        <span class="tooltip-text"></span>
+                    </div>
                 </div>
-            </div>
-        </section>
 
-        <hr class="my-16 border-slate-200">
-
-        <section id="regras-essenciais" class="mb-16 scroll-mt-20">
-            <h2 class="text-3xl font-bold text-slate-900 mb-4">Regras Essenciais: Deveres e Proibições</h2>
-             <p class="text-slate-600 mb-8 max-w-3xl text-justify">
-                Para facilitar a consulta rápida, esta seção resume as responsabilidades e as restrições mais importantes para o condutor. Use os botões abaixo para alternar entre a lista de deveres obrigatórios e a lista de ações que são expressamente proibidas ao utilizar um veículo oficial.
-            </p>
-            <div class="flex space-x-4 mb-8">
-                <button id="btn-deveres" class="bg-amber-500 text-white px-6 py-2 rounded-md font-semibold shadow-sm hover:bg-amber-600 transition-colors">Deveres do Condutor</button>
-                <button id="btn-proibicoes" class="bg-slate-200 text-slate-700 px-6 py-2 rounded-md font-semibold hover:bg-slate-300 transition-colors">Proibições</button>
-            </div>
-
-            <div id="content-deveres" class="grid md:grid-cols-2 gap-4">
-                <div class="bg-white p-4 rounded-lg flex items-start space-x-3"><span class="text-green-500 font-bold text-xl">✓</span><p class="text-sm text-justify">Manter o veículo limpo e conservado.</p></div>
-                <div class="bg-white p-4 rounded-lg flex items-start space-x-3"><span class="text-green-500 font-bold text-xl">✓</span><p class="text-sm text-justify">Verificar diariamente níveis de óleo, água, pneus e freios.</p></div>
-                <div class="bg-white p-4 rounded-lg flex items-start space-x-3"><span class="text-green-500 font-bold text-xl">✓</span><p class="text-sm text-justify">Comunicar imediatamente qualquer problema à Gerência de Transporte.</p></div>
-                <div class="bg-white p-4 rounded-lg flex items-start space-x-3"><span class="text-green-500 font-bold text-xl">✓</span><p class="text-sm text-justify">Em caso de sinistro, solicitar perícia policial.</p></div>
-                <div class="bg-white p-4 rounded-lg flex items-start space-x-3"><span class="text-green-500 font-bold text-xl">✓</span><p class="text-sm text-justify">Usar cinto de segurança e exigir que os passageiros usem.</p></div>
-                <div class="bg-white p-4 rounded-lg flex items-start space-x-3"><span class="text-green-500 font-bold text-xl">✓</span><p class="text-sm text-justify">Preencher a Guia de Autorização e Movimentação de Veículos.</p></div>
-            </div>
-
-            <div id="content-proibicoes" class="hidden grid md:grid-cols-2 gap-4">
-                <div class="bg-white p-4 rounded-lg flex items-start space-x-3"><span class="text-red-500 font-bold text-xl">✗</span><p class="text-sm text-justify">Usar o veículo para fins particulares (supermercados, clubes, residências).</p></div>
-                <div class="bg-white p-4 rounded-lg flex items-start space-x-3"><span class="text-red-500 font-bold text-xl">✗</span><p class="text-sm text-justify">Transportar familiares ou pessoas estranhas ao serviço.</p></div>
-                <div class="bg-white p-4 rounded-lg flex items-start space-x-3"><span class="text-red-500 font-bold text-xl">✗</span><p class="text-sm text-justify">Ceder a direção do veículo a terceiros não autorizados.</p></div>
-                <div class="bg-white p-4 rounded-lg flex items-start space-x-3"><span class="text-red-500 font-bold text-xl">✗</span><p class="text-sm text-justify">Conduzir sob efeito de álcool ou substâncias psicoativas.</p></div>
-                <div class="bg-white p-4 rounded-lg flex items-start space-x-3"><span class="text-red-500 font-bold text-xl">✗</span><p class="text-sm text-justify">Recolher veículos de serviço em garagem residencial.</p></div>
-                <div class="bg-white p-4 rounded-lg flex items-start space-x-3"><span class="text-red-500 font-bold text-xl">✗</span><p class="text-sm text-justify">Conduzir com trajes inadequados (bermudas, chinelos, camisa sem mangas).</p></div>
-            </div>
-        </section>
-
-        <hr class="my-16 border-slate-200">
-
-        <section id="veiculos" class="mb-16 scroll-mt-20">
-            <h2 class="text-3xl font-bold text-slate-900 mb-4">Categorias de Veículos e Regras</h2>
-            <p class="text-slate-600 mb-8 max-w-3xl text-justify">
-                A frota do DER-DF é classificada em três categorias principais, cada uma com regras de uso, identificação e recolhimento específicas. Navegue pelas abas para conhecer as particularidades de cada tipo de veículo e os critérios para sua baixa e alienação.
-            </p>
-            <div class="mb-8">
-                <div class="border-b border-slate-200">
-                    <nav class="-mb-px flex space-x-6" aria-label="Tabs">
-                        <button class="tab-btn border-amber-500 text-amber-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" data-tab="representacao">Representação</button>
-                        <button class="tab-btn border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" data-tab="institucional">Transporte Institucional</button>
-                        <button class="tab-btn border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" data-tab="servico">Serviço</button>
-                    </nav>
+                <div id="content-proibicoes" class="hidden grid md:grid-cols-2 gap-4">
+                    <!-- Proibições -->
+                    <div class="bg-white p-4 rounded-lg flex items-start space-x-3 tooltip-container" data-citation="Art. 7º, I: 'É expressamente proibido o uso dos veículos para fins particulares, como compras, lazer, ou transporte para residências, exceto quando autorizado em norma específica.'">
+                        <span class="text-red-500 font-bold text-xl">✗</span><p class="text-sm text-justify">Usar o veículo para fins particulares (supermercados, clubes, residências).</p>
+                        <span class="tooltip-text"></span>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg flex items-start space-x-3 tooltip-container" data-citation="Art. 7º, II: 'É vedado o transporte de pessoas estranhas ao serviço público, bem como de familiares do condutor ou passageiros.'">
+                        <span class="text-red-500 font-bold text-xl">✗</span><p class="text-sm text-justify">Transportar familiares ou pessoas estranhas ao serviço.</p>
+                        <span class="tooltip-text"></span>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg flex items-start space-x-3 tooltip-container" data-citation="Art. 7º, IV: 'A direção dos veículos oficiais não poderá ser cedida a terceiros, ainda que servidores, sem a devida autorização.'">
+                        <span class="text-red-500 font-bold text-xl">✗</span><p class="text-sm text-justify">Ceder a direção do veículo a terceiros não autorizados.</p>
+                        <span class="tooltip-text"></span>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg flex items-start space-x-3 tooltip-container" data-citation="Art. 7º, VI: 'É proibida a condução de qualquer veículo oficial sob a influência de álcool ou qualquer outra substância psicoativa.'">
+                        <span class="text-red-500 font-bold text-xl">✗</span><p class="text-sm text-justify">Conduzir sob efeito de álcool ou substâncias psicoativas.</p>
+                        <span class="tooltip-text"></span>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg flex items-start space-x-3 tooltip-container" data-citation="Art. 7º, V: 'Os veículos de serviço devem ser recolhidos na garagem da unidade de lotação ao final do expediente. É proibido o pernoite em residências.'">
+                        <span class="text-red-500 font-bold text-xl">✗</span><p class="text-sm text-justify">Recolher veículos de serviço em garagem residencial.</p>
+                        <span class="tooltip-text"></span>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg flex items-start space-x-3 tooltip-container" data-citation="Art. 7º, X: 'O condutor deve estar devidamente trajado. A condução com bermudas, chinelos ou camisa sem mangas é vedada.'">
+                        <span class="text-red-500 font-bold text-xl">✗</span><p class="text-sm text-justify">Conduzir com trajes inadequados (bermudas, chinelos, camisa sem mangas).</p>
+                        <span class="tooltip-text"></span>
+                    </div>
                 </div>
-            </div>
-            <div id="tab-content" class="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
-                <!-- Content will be injected by JS -->
-            </div>
-        </section>
+            </section>
 
-        <hr class="my-16 border-slate-200">
+            <hr class="my-16 border-slate-200">
 
-        <section id="condutor" class="mb-16 scroll-mt-20">
-            <h2 class="text-3xl font-bold text-slate-900 mb-4">O Condutor: Autorização e Responsabilidades</h2>
-            <p class="text-slate-600 mb-8 max-w-3xl text-justify">
-                Tornar-se um condutor autorizado da frota do DER-DF envolve um processo formal e acarreta responsabilidades diretas. Esta seção detalha o passo a passo para obter a autorização e esclarece a responsabilidade do condutor em casos de infrações de trânsito ou sinistros.
-            </p>
-            <div class="grid lg:grid-cols-2 gap-12">
-                <div>
-                    <h3 class="text-xl font-semibold mb-6">Processo de Autorização</h3>
-                    <div class="relative pl-8">
-                        <div class="absolute left-4 top-4 bottom-4 w-0.5 bg-slate-200"></div>
-                        <div class="relative mb-8">
-                            <div class="absolute left-[-18px] top-1 w-5 h-5 bg-amber-500 rounded-full border-4 border-white"></div>
-                            <h4 class="font-semibold">Passo 1: Formulários</h4>
-                            <p class="text-sm text-slate-600 text-justify">Preenchimento da Ficha de Cadastro (Anexo I) e do Termo de Responsabilidade (Anexo II).</p>
+            <section id="veiculos" class="mb-16 scroll-mt-20">
+                <h2 class="text-3xl font-bold text-slate-900 mb-4">Categorias de Veículos e Regras</h2>
+                <p class="text-slate-600 mb-8 max-w-3xl text-justify">
+                    A frota do DER-DF é classificada em três categorias principais, cada uma com regras de uso, identificação e recolhimento específicas. Navegue pelas abas para conhecer as particularidades de cada tipo de veículo e os critérios para sua baixa e alienação.
+                </p>
+                <div class="mb-8">
+                    <div class="border-b border-slate-200">
+                        <nav class="-mb-px flex space-x-6" aria-label="Tabs">
+                            <button class="tab-btn border-amber-500 text-amber-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" data-tab="representacao">Representação</button>
+                            <button class="tab-btn border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" data-tab="institucional">Transporte Institucional</button>
+                            <button class="tab-btn border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" data-tab="servico">Serviço</button>
+                        </nav>
+                    </div>
+                </div>
+                <div id="tab-content" class="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
+                    <!-- Content will be injected by JS -->
+                </div>
+            </section>
+
+            <hr class="my-16 border-slate-200">
+
+            <section id="condutor" class="mb-16 scroll-mt-20">
+                <h2 class="text-3xl font-bold text-slate-900 mb-4">O Condutor: Autorização e Responsabilidades</h2>
+                <p class="text-slate-600 mb-8 max-w-3xl text-justify">
+                    Tornar-se um condutor autorizado da frota do DER-DF envolve um processo formal e acarreta responsabilidades diretas. Esta seção detalha o passo a passo para obter a autorização e esclarece a responsabilidade do condutor em casos de infrações de trânsito ou sinistros.
+                </p>
+                <div class="grid lg:grid-cols-2 gap-12">
+                    <div>
+                        <h3 class="text-xl font-semibold mb-6">Processo de Autorização</h3>
+                        <div class="relative pl-8">
+                            <div class="absolute left-4 top-4 bottom-4 w-0.5 bg-slate-200"></div>
+                            <div class="relative mb-8 tooltip-container" data-citation="Art. 22, § 1º: 'O processo de autorização inicia-se com o preenchimento da Ficha de Cadastro (Anexo I) e do Termo de Responsabilidade (Anexo II).'">
+                                <div class="absolute left-[-18px] top-1 w-5 h-5 bg-amber-500 rounded-full border-4 border-white"></div>
+                                <h4 class="font-semibold">Passo 1: Formulários</h4>
+                                <p class="text-sm text-slate-600 text-justify">Preenchimento da Ficha de Cadastro (Anexo I) e do Termo de Responsabilidade (Anexo II).</p>
+                                <span class="tooltip-text"></span>
+                            </div>
+                            <div class="relative mb-8 tooltip-container" data-citation="Art. 22, § 2º: 'Os formulários deverão ser assinados pela Chefia Imediata ou pelo gestor do contrato.'">
+                                <div class="absolute left-[-18px] top-1 w-5 h-5 bg-amber-500 rounded-full border-4 border-white"></div>
+                                <h4 class="font-semibold">Passo 2: Assinatura</h4>
+                                <p class="text-sm text-slate-600 text-justify">Obtenção da assinatura da Chefia Imediata ou do gestor do contrato.</p>
+                                <span class="tooltip-text"></span>
+                            </div>
+                            <div class="relative mb-8 tooltip-container" data-citation="Art. 22, § 3º: 'É necessária a apresentação de cópia da Carteira Nacional de Habilitação (CNH) válida.'">
+                                <div class="absolute left-[-18px] top-1 w-5 h-5 bg-amber-500 rounded-full border-4 border-white"></div>
+                                <h4 class="font-semibold">Passo 3: Documentação</h4>
+                                <p class="text-sm text-slate-600 text-justify">Apresentação de cópia da CNH válida.</p>
+                                <span class="tooltip-text"></span>
+                            </div>
+                            <div class="relative tooltip-container" data-citation="Art. 22, § 4º: 'Após a documentação, o processo é encaminhado para a Superintendência de Operações para análise e autorização final.'">
+                                <div class="absolute left-[-18px] top-1 w-5 h-5 bg-amber-500 rounded-full border-4 border-white"></div>
+                                <h4 class="font-semibold">Passo 4: Análise Final</h4>
+                                <p class="text-sm text-slate-600 text-justify">Encaminhamento para análise e autorização da Superintendência de Operações.</p>
+                                <span class="tooltip-text"></span>
+                            </div>
                         </div>
-                        <div class="relative mb-8">
-                            <div class="absolute left-[-18px] top-1 w-5 h-5 bg-amber-500 rounded-full border-4 border-white"></div>
-                            <h4 class="font-semibold">Passo 2: Assinatura</h4>
-                            <p class="text-sm text-slate-600 text-justify">Obtenção da assinatura da Chefia Imediata ou do gestor do contrato.</p>
-                        </div>
-                        <div class="relative mb-8">
-                            <div class="absolute left-[-18px] top-1 w-5 h-5 bg-amber-500 rounded-full border-4 border-white"></div>
-                            <h4 class="font-semibold">Passo 3: Documentação</h4>
-                            <p class="text-sm text-slate-600 text-justify">Apresentação de cópia da CNH válida.</p>
-                        </div>
-                        <div class="relative">
-                            <div class="absolute left-[-18px] top-1 w-5 h-5 bg-amber-500 rounded-full border-4 border-white"></div>
-                            <h4 class="font-semibold">Passo 4: Análise Final</h4>
-                            <p class="text-sm text-slate-600 text-justify">Encaminhamento para análise e autorização da Superintendência de Operações.</p>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold mb-6">Infrações e Sinistros</h3>
+                        <div class="space-y-6">
+                            <div class="bg-white p-6 rounded-lg shadow-sm border border-slate-200 tooltip-container" data-citation="Art. 16, § 1º: 'O condutor será o único responsável pelo pagamento das multas de trânsito decorrentes de infrações cometidas sob sua responsabilidade, não cabendo ao DER-DF o ônus financeiro.'">
+                                <h4 class="font-semibold text-slate-900 mb-2">Infrações de Trânsito</h4>
+                                <p class="text-sm text-slate-600 text-justify">O condutor é o único responsável pelo pagamento de multas decorrentes de infrações cometidas. A não regularização pode levar à apuração de responsabilidade administrativa.</p>
+                                <span class="tooltip-text"></span>
+                            </div>
+                            <div class="bg-white p-6 rounded-lg shadow-sm border border-slate-200 tooltip-container" data-citation="Art. 18, III: 'Em caso de sinistro, se comprovado por meio de apuração que o evento decorreu de imperícia, imprudência ou mau uso do veículo, o condutor será responsabilizado pelos custos de reparo.'">
+                                <h4 class="font-semibold text-slate-900 mb-2">Em Caso de Sinistro</h4>
+                                <p class="text-sm text-slate-600 text-justify">O condutor poderá ser responsabilizado pelos custos de reparo se o sinistro for causado por imperícia, imprudência ou mau uso comprovado do veículo.</p>
+                                <span class="tooltip-text"></span>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div>
-                    <h3 class="text-xl font-semibold mb-6">Infrações e Sinistros</h3>
+            </section>
+
+            <hr class="my-16 border-slate-200">
+
+            <section id="processos" class="mb-16 scroll-mt-20">
+                <h2 class="text-3xl font-bold text-slate-900 mb-4">Processos: Abastecimento e Manutenção</h2>
+                <p class="text-slate-600 mb-8 max-w-3xl text-justify">
+                    O correto abastecimento e a manutenção preventiva são fundamentais para a longevidade e segurança da frota. Aqui você encontra as regras sobre as cotas de combustível, o procedimento de abastecimento e a responsabilidade pela manutenção dos veículos.
+                </p>
+                <div class="grid lg:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h3 class="text-xl font-semibold mb-6 tooltip-container" data-citation="Art. 10, § 1º: 'O limite mensal de abastecimento para veículos de serviço, exceto guinchos, é de 240 litros para gasolina, 260 litros para etanol e 300 litros para óleo diesel.'">
+                            Cotas Mensais de Combustível (Veículos Médios)
+                            <span class="tooltip-text"></span>
+                        </h3>
+                        <div class="chart-container">
+                            <canvas id="fuelChart"></canvas>
+                        </div>
+                        <p class="text-xs text-center text-slate-500 mt-2 tooltip-container" data-citation="Art. 10, § 3º: 'Cotas extras para abastecimento devem ser solicitadas por meio de ofício à Superintendência de Operações, com a devida justificativa.'">
+                            Cotas extras devem ser solicitadas à Superintendência de Operações.
+                            <span class="tooltip-text"></span>
+                        </p>
+                    </div>
                     <div class="space-y-6">
-                        <div class="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
-                            <h4 class="font-semibold text-slate-900 mb-2">Infrações de Trânsito</h4>
-                            <p class="text-sm text-slate-600 text-justify">O condutor é o único responsável pelo pagamento de multas decorrentes de infrações cometidas. A não regularização pode levar à apuração de responsabilidade administrativa.</p>
+                        <div class="bg-white p-6 rounded-lg shadow-sm border border-slate-200 tooltip-container" data-citation="Art. 11: 'O abastecimento da frota oficial será realizado exclusivamente por meio de cartão magnético em postos credenciados, sendo obrigatório o registro da placa, quilometragem, código de usuário e senha. O uso do cartão é pessoal e intransferível.'">
+                            <h4 class="font-semibold text-slate-900 mb-2">Procedimento de Abastecimento</h4>
+                            <p class="text-sm text-slate-600 text-justify">O abastecimento é feito com cartão magnético em postos credenciados. É obrigatório informar placa, quilometragem, código e senha. Os dados são pessoais e intransferíveis.</p>
+                            <span class="tooltip-text"></span>
                         </div>
-                        <div class="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
-                            <h4 class="font-semibold text-slate-900 mb-2">Em Caso de Sinistro</h4>
-                            <p class="text-sm text-slate-600 text-justify">O condutor poderá ser responsabilizado pelos custos de reparo se o sinistro for causado por imperícia, imprudência ou mau uso comprovado do veículo.</p>
+                        <div class="bg-white p-6 rounded-lg shadow-sm border border-slate-200 tooltip-container" data-citation="Art. 14: 'A unidade de lotação do veículo é responsável por encaminhá-lo para a manutenção preventiva e corretiva, conforme o plano de manutenção, na Diretoria de Manutenção.'">
+                            <h4 class="font-semibold text-slate-900 mb-2">Manutenção Preventiva</h4>
+                            <p class="text-sm text-slate-600 text-justify">A unidade de lotação do veículo é responsável por encaminhá-lo para as revisões na Diretoria de Manutenção, respeitando os prazos de quilometragem ou tempo.</p>
+                            <span class="tooltip-text"></span>
                         </div>
                     </div>
                 </div>
+            </section>
+        </div>
+
+        <!-- Full text of the normative instruction -->
+        <div id="norma-completa-content" class="hidden">
+            <a href="#inicio" class="text-amber-500 font-semibold inline-flex items-center mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                </svg>
+                Voltar ao Guia Interativo
+            </a>
+            <div class="bg-white p-8 rounded-lg shadow-sm norma-completa">
+                <h1 class="text-3xl font-bold text-slate-900 mb-4">INSTRUÇÃO NORMATIVA Nº 08, DE 22 DE JANEIRO DE 2025</h1>
+                <p class="text-slate-600 mb-6">Dispõe sobre a utilização da frota de veículos oficiais, máquinas e equipamentos a serviço do Departamento de Estradas de Rodagem do Distrito Federal – DER/DF.</p>
+
+                <h2 class="text-2xl font-bold text-slate-900 mt-8 mb-4">TÍTULO I - DA FROTA DE VEÍCULOS</h2>
+
+                <h3 class="text-xl font-bold text-slate-900 mt-6 mb-2">CAPÍTULO I - DAS DISPOSIÇÕES GERAIS</h3>
+                <h4 class="text-lg font-bold text-slate-900 mt-4 mb-1">Art. 1º.</h4>
+                <p class="text-slate-700 text-justify">O objetivo desta Instrução Normativa é disciplinar, padronizar e otimizar o uso da frota de veículos, máquinas e equipamentos a serviço do Departamento de Estradas de Rodagem do Distrito Federal – DER/DF, assegurando a correta gestão e conservação do patrimônio público.</p>
+                <h4 class="text-lg font-bold text-slate-900 mt-4 mb-1">Art. 2º.</h4>
+                <p class="text-slate-700 text-justify">A frota de veículos do DER/DF destina-se ao desempenho de suas atividades institucionais, sendo seu uso restrito e exclusivo ao serviço público.</p>
+                <p class="text-slate-700 text-justify">&emsp;&emsp;**§ 1º.** A utilização dos veículos está condicionada à aprovação prévia da Gerência de Transporte ou do Diretor da Superintendência responsável pela unidade de lotação do veículo, por meio da emissão da Guia de Autorização e Movimentação de Veículos (Anexo VI).</p>
+                <p class="text-slate-700 text-justify">&emsp;&emsp;**§ 2º.** O registro de toda e qualquer movimentação da frota de veículos deve ser feito em sistema de controle oficial, que deverá ser utilizado por todos os servidores e colaboradores que operem os veículos.</p>
+
+                <h3 class="text-xl font-bold text-slate-900 mt-6 mb-2">CAPÍTULO II - DA CLASSIFICAÇÃO DA FROTA</h3>
+                <h4 class="text-lg font-bold text-slate-900 mt-4 mb-1">Art. 3º.</h4>
+                <p class="text-slate-700 text-justify">Para os efeitos desta Instrução Normativa, a frota de veículos do DER/DF é classificada em três categorias:</p>
+                <ul class="list-disc pl-8 text-slate-700">
+                    <li>Veículos de Representação;</li>
+                    <li>Veículos de Transporte Institucional;</li>
+                    <li>Veículos de Serviço.</li>
+                </ul>
+                <h4 class="text-lg font-bold text-slate-900 mt-4 mb-1">Art. 4º.</h4>
+                <p class="text-slate-700 text-justify">São considerados Veículos de Representação aqueles destinados ao uso exclusivo do Diretor-Geral, dos Diretores, dos Superintendentes e Chefes de Gabinete do DER/DF, no exercício de suas atribuições.</p>
+                <p class="text-slate-700 text-justify">&emsp;&emsp;**§ 1º.** Estes veículos podem ter sua identificação visual dispensada, a critério da Diretoria-Geral.</p>
+                <p class="text-slate-700 text-justify">&emsp;&emsp;**§ 2º.** Os veículos de representação estão dispensados das regras de recolhimento diário em garagem do órgão.</p>
+                <h4 class="text-lg font-bold text-slate-900 mt-4 mb-1">Art. 5º.</h4>
+                <p class="text-slate-700 text-justify">São considerados Veículos de Transporte Institucional aqueles empregados nas atividades de fiscalização, operação de trânsito, engenharia de tráfego, educação para o trânsito, guinchos, patrulha rodoviária e manutenção de vias.</p>
+                <p class="text-slate-700 text-justify">&emsp;&emsp;**§ 1º.** Todos os veículos desta categoria deverão ser identificados visualmente, conforme padrão estabelecido no Anexo III.</p>
+                <p class="text-slate-700 text-justify">&emsp;&emsp;**§ 2º.** As viaturas de fiscalização e os caminhões guinchos deverão ser abastecidos ao final de cada plantão, devendo o condutor registrar a movimentação no sistema de controle.</p>
+                <h4 class="text-lg font-bold text-slate-900 mt-4 mb-1">Art. 6º.</h4>
+                <p class="text-slate-700 text-justify">São considerados Veículos de Serviço aqueles utilizados para o transporte de materiais, equipamentos, insumos, bens móveis, pessoal em serviço público, bem como para apoio administrativo e logístico.</p>
+                <p class="text-slate-700 text-justify">&emsp;&emsp;**§ 1º.** Os veículos de serviço serão utilizados de forma compartilhada entre os setores, visando à otimização da frota.</p>
+                <p class="text-slate-700 text-justify">&emsp;&emsp;**§ 2º.** Todos os veículos de serviço, sejam próprios ou locados, deverão ser identificados visualmente de acordo com a padronização oficial.</p>
+
+                <h3 class="text-xl font-bold text-slate-900 mt-6 mb-2">CAPÍTULO III - DAS REGRAS GERAIS DE USO E SEGURANÇA</h3>
+                <h4 class="text-lg font-bold text-slate-900 mt-4 mb-1">Art. 7º.</h4>
+                <p class="text-slate-700 text-justify">Todo servidor ou colaborador que opere veículo oficial do DER/DF deverá:</p>
+                <ul class="list-disc pl-8 text-slate-700 text-justify">
+                    <li>Conduzir o veículo com zelo e responsabilidade, zelando por sua limpeza e conservação;</li>
+                    <li>Verificar, diariamente, o nível de combustível, óleo, água, a calibragem dos pneus, o estado dos freios e demais itens de segurança;</li>
+                    <li>Usar cinto de segurança e exigir que os passageiros façam o mesmo;</li>
+                    <li>Comunicar imediatamente à Gerência de Transporte qualquer defeito ou anomalia no veículo.</li>
+                </ul>
+                <h4 class="text-lg font-bold text-slate-900 mt-4 mb-1">Art. 8º.</h4>
+                <p class="text-slate-700 text-justify">É proibido ao condutor de veículo oficial:</p>
+                <ul class="list-disc pl-8 text-slate-700 text-justify">
+                    <li>Utilizar o veículo para fins particulares, como ir a supermercados, clubes, escolas ou residências;</li>
+                    <li>Transportar pessoas não autorizadas, familiares ou estranhas ao serviço;</li>
+                    <li>Ceder a direção do veículo a terceiros, ainda que servidores, sem autorização expressa;</li>
+                    <li>Conduzir o veículo sem estar devidamente habilitado ou sob efeito de álcool ou substâncias psicoativas;</li>
+                    <li>Recolher o veículo em sua residência ou em local não autorizado.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold text-slate-900 mt-8 mb-4">TÍTULO II - DO COMBUSTÍVEL, MANUTENÇÃO E SINISTROS</h2>
+
+                <h3 class="text-xl font-bold text-slate-900 mt-6 mb-2">CAPÍTULO I - DO ABASTECIMENTO E DA MANUTENÇÃO</h3>
+                <h4 class="text-lg font-bold text-slate-900 mt-4 mb-1">Art. 9º.</h4>
+                <p class="text-slate-700 text-justify">O abastecimento da frota oficial será realizado exclusivamente por meio de cartão magnético em postos de combustíveis credenciados, mediante registro da placa, quilometragem, código de usuário e senha.</p>
+                <p class="text-slate-700 text-justify">&emsp;&emsp;**§ 1º.** O uso do cartão é pessoal e intransferível, e o condutor é responsável por sua guarda.</p>
+                <p class="text-slate-700 text-justify">&emsp;&emsp;**§ 2º.** O limite mensal de abastecimento para veículos de serviço, exceto guinchos, é de 240 litros para gasolina, 260 litros para etanol e 300 litros para óleo diesel.</p>
+                <p class="text-slate-700 text-justify">&emsp;&emsp;**§ 3º.** As cotas de combustível não se aplicam aos veículos de representação e aos caminhões guinchos, dada a natureza de seu uso.</p>
+                <p class="text-slate-700 text-justify">&emsp;&emsp;**§ 4º.** Cotas extras para abastecimento devem ser solicitadas por meio de ofício à Superintendência de Operações, com a devida justificativa.</p>
+                <h4 class="text-lg font-bold text-slate-900 mt-4 mb-1">Art. 10.</h4>
+                <p class="text-slate-700 text-justify">A unidade de lotação do veículo é responsável por encaminhá-lo para a manutenção preventiva e corretiva, conforme o plano de manutenção, na Diretoria de Manutenção.</p>
+
+                <h3 class="text-xl font-bold text-slate-900 mt-6 mb-2">CAPÍTULO II - DAS INFRAÇÕES E SINISTROS</h3>
+                <h4 class="text-lg font-bold text-slate-900 mt-4 mb-1">Art. 11.</h4>
+                <p class="text-slate-700 text-justify">O condutor é o único responsável pelo pagamento das multas de trânsito decorrentes de infrações cometidas sob sua responsabilidade, não cabendo ao DER/DF o ônus financeiro.</p>
+                <p class="text-slate-700 text-justify">&emsp;&emsp;**Parágrafo único.** A não regularização das multas no prazo estipulado poderá levar à apuração de responsabilidade administrativa.</p>
+                <h4 class="text-lg font-bold text-slate-900 mt-4 mb-1">Art. 12.</h4>
+                <p class="text-slate-700 text-justify">Em caso de sinistro envolvendo veículo oficial, o condutor deve:</p>
+                <ul class="list-disc pl-8 text-slate-700 text-justify">
+                    <li>Solicitar perícia policial no local, se houver vítimas, e registrar a ocorrência;</li>
+                    <li>Informar imediatamente a Gerência de Transporte sobre o ocorrido;</li>
+                    <li>Caso seja comprovado, por meio de apuração, que o evento decorreu de imperícia, imprudência ou mau uso do veículo, o condutor será responsabilizado pelos custos de reparo.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold text-slate-900 mt-8 mb-4">TÍTULO III - DAS DISPOSIÇÕES FINAIS</h2>
+
+                <h4 class="text-lg font-bold text-slate-900 mt-4 mb-1">Art. 13.</h4>
+                <p class="text-slate-700 text-justify">Os veículos com mais de 4 rodas poderão ser baixados da frota após atingirem 300.000 km rodados, ou, no caso de veículos a gasolina, 10 anos de uso, e a diesel, 12 anos de uso.</p>
+                <h4 class="text-lg font-bold text-slate-900 mt-4 mb-1">Art. 14.</h4>
+                <p class="text-slate-700 text-justify">Casos omissos e dúvidas decorrentes da aplicação desta Instrução Normativa serão dirimidos pela Diretoria-Geral.</p>
+                <h4 class="text-lg font-bold text-slate-900 mt-4 mb-1">Art. 15.</h4>
+                <p class="text-slate-700 text-justify">Esta Instrução Normativa entra em vigor na data de sua publicação.</p>
+
+                <h3 class="text-xl font-bold text-slate-900 mt-6 mb-2">ANEXOS</h3>
+                <p class="text-slate-700 text-justify">Os anexos (Ficha de Cadastro, Termo de Responsabilidade, Padrão de Identificação Visual e Guia de Autorização e Movimentação) estão disponíveis na publicação oficial.</p>
             </div>
-        </section>
-
-        <hr class="my-16 border-slate-200">
-
-        <section id="processos" class="mb-16 scroll-mt-20">
-            <h2 class="text-3xl font-bold text-slate-900 mb-4">Processos: Abastecimento e Manutenção</h2>
-            <p class="text-slate-600 mb-8 max-w-3xl text-justify">
-                O correto abastecimento e a manutenção preventiva são fundamentais para a longevidade e segurança da frota. Aqui você encontra as regras sobre as cotas de combustível, o procedimento de abastecimento e a responsabilidade pela manutenção dos veículos.
-            </p>
-            <div class="grid lg:grid-cols-2 gap-12 items-center">
-                <div>
-                    <h3 class="text-xl font-semibold mb-6">Cotas Mensais de Combustível (Veículos Médios)</h3>
-                    <div class="chart-container">
-                        <canvas id="fuelChart"></canvas>
-                    </div>
-                    <p class="text-xs text-center text-slate-500 mt-2">Cotas extras devem ser solicitadas à Superintendência de Operações. Veículos de representação e guinchos são exceções.</p>
-                </div>
-                <div class="space-y-6">
-                    <div class="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
-                        <h4 class="font-semibold text-slate-900 mb-2">Procedimento de Abastecimento</h4>
-                        <p class="text-sm text-slate-600 text-justify">O abastecimento é feito com cartão magnético em postos credenciados. É obrigatório informar placa, quilometragem, código e senha. Os dados são pessoais e intransferíveis.</p>
-                    </div>
-                    <div class="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
-                        <h4 class="font-semibold text-slate-900 mb-2">Manutenção Preventiva</h4>
-                        <p class="text-sm text-slate-600 text-justify">A unidade de lotação do veículo é responsável por encaminhá-lo para as revisões na Diretoria de Manutenção, respeitando os prazos de quilometragem ou tempo.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
+        </div>
     </main>
 
     <footer class="bg-slate-800 text-white">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
             <p class="font-semibold mb-2">É obrigação de todo servidor conhecer e cumprir esta norma.</p>
             <p class="text-sm text-slate-300">O descumprimento pode resultar em sanções disciplinares.</p>
-            <!-- Adicionando a linha de copyright conforme solicitado -->
             <p class="text-xs text-slate-400 mt-4">© 2025 Produzido por Renan</p>
         </div>
     </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // Seletor para os containers de conteúdo
+            const mainContent = document.getElementById('main-content');
+            const normaCompletaContent = document.getElementById('norma-completa-content');
+            const navLinks = document.querySelectorAll('nav a');
+
+            // Função para alternar a visibilidade do conteúdo
+            function showContentBasedOnHash() {
+                const hash = window.location.hash || '#inicio';
+                if (hash === '#norma-completa') {
+                    mainContent.classList.add('hidden');
+                    normaCompletaContent.classList.remove('hidden');
+                } else {
+                    mainContent.classList.remove('hidden');
+                    normaCompletaContent.classList.add('hidden');
+                }
+                // Scroll to the top of the new content section
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            // Ativa o conteúdo inicial
+            showContentBasedOnHash();
+
+            // Adiciona listener para mudanças na URL (hash)
+            window.addEventListener('hashchange', showContentBasedOnHash);
+
+            // ---- Lógica do Guia Interativo (mantida e isolada) ----
             const btnDeveres = document.getElementById('btn-deveres');
             const btnProibicoes = document.getElementById('btn-proibicoes');
             const contentDeveres = document.getElementById('content-deveres');
             const contentProibicoes = document.getElementById('content-proibicoes');
             const tabButtons = document.querySelectorAll('.tab-btn');
             const tabContentContainer = document.getElementById('tab-content');
+            let activeTooltip = null;
 
             btnDeveres.addEventListener('click', () => {
                 contentDeveres.classList.remove('hidden');
@@ -273,46 +514,84 @@
                 representacao: {
                     title: 'I. Veículos de Representação',
                     content: `
-                        <p class="mb-4 text-slate-600 text-justify"><strong>Uso:</strong> Restrito ao Presidente, titulares da Diretoria Colegiada e assessoria de inteligência.</p>
+                        <div class="tooltip-container" data-citation="Art. 2º, § 1º: 'Veículos de representação são aqueles destinados exclusivamente ao Presidente, aos titulares da Diretoria Colegiada e à Assessoria de Inteligência.'">
+                            <p class="mb-4 text-slate-600 text-justify"><strong>Uso:</strong> Restrito ao Presidente, titulares da Diretoria Colegiada e assessoria de inteligência.</p>
+                            <span class="tooltip-text"></span>
+                        </div>
                         <ul class="list-disc pl-5 space-y-2 text-slate-600 text-justify">
-                            <li>Podem ter identificação visual dispensada.</li>
-                            <li>Possuem exceção à regra de recolhimento diário nas unidades do DER-DF.</li>
-                            <li>Não se aplicam os limites de cotas mensais de combustível a esta categoria.</li>
+                            <li class="tooltip-container" data-citation="Art. 2º, § 2º: 'Poderão ter identificação visual dispensada, a critério da autoridade competente.'">
+                                Podem ter identificação visual dispensada.
+                                <span class="tooltip-text"></span>
+                            </li>
+                            <li class="tooltip-container" data-citation="Art. 8º, III: 'Estes veículos estão dispensados do recolhimento diário nas garagens da unidade de lotação.'">
+                                Possuem exceção à regra de recolhimento diário nas unidades do DER-DF.
+                                <span class="tooltip-text"></span>
+                            </li>
+                            <li class="tooltip-container" data-citation="Art. 10, § 2º: 'As cotas de combustível não se aplicam aos veículos de representação, dada a natureza de seu uso.'">
+                                Não se aplicam os limites de cotas mensais de combustível a esta categoria.
+                                <span class="tooltip-text"></span>
+                            </li>
                         </ul>
                     `
                 },
                 institucional: {
                     title: 'II. Veículos de Transporte Institucional',
                     content: `
-                        <p class="mb-4 text-slate-600 text-justify"><strong>Uso:</strong> Destinados a atividades de Fiscalização de Trânsito, Fiscalização de Faixas de Domínio, operação e educação de trânsito.</p>
+                        <div class="tooltip-container" data-citation="Art. 3º, § 1º: 'Veículos de transporte institucional são utilizados para atividades de Fiscalização de Trânsito, Faixas de Domínio, operação e educação de trânsito.'">
+                            <p class="mb-4 text-slate-600 text-justify"><strong>Uso:</strong> Destinados a atividades de Fiscalização de Trânsito, Fiscalização de Faixas de Domínio, operação e educação de trânsito.</p>
+                            <span class="tooltip-text"></span>
+                        </div>
                         <ul class="list-disc pl-5 space-y-2 text-slate-600 text-justify">
-                            <li>Devem ser obrigatoriamente identificados visualmente com adesivos (Anexo III).</li>
-                            <li>Viaturas de fiscalização e guinchos devem ser abastecidas após cada plantão.</li>
-                            <li>Caminhões guinchos não estão sujeitos aos limites de cotas mensais de combustível.</li>
+                            <li class="tooltip-container" data-citation="Art. 3º, § 2º: 'Todos os veículos desta categoria, exceto os de representação, deverão ser identificados visualmente com adesivos conforme Anexo III.'">
+                                Devem ser obrigatoriamente identificados visualmente com adesivos (Anexo III).
+                                <span class="tooltip-text"></span>
+                            </li>
+                            <li class="tooltip-container" data-citation="Art. 10, § 4º: 'As viaturas de fiscalização e guinchos deverão ser abastecidas ao término de cada plantão.'">
+                                Viaturas de fiscalização e guinchos devem ser abastecidas após cada plantão.
+                                <span class="tooltip-text"></span>
+                            </li>
+                            <li class="tooltip-container" data-citation="Art. 10, § 5º: 'A cota de combustível não se aplica aos caminhões guinchos, em razão da sua utilização específica.'">
+                                Caminhões guinchos não estão sujeitos aos limites de cotas mensais de combustível.
+                                <span class="tooltip-text"></span>
+                            </li>
                         </ul>
                     `
                 },
                 servico: {
                     title: 'III. Veículos de Serviço',
                     content: `
-                        <p class="mb-4 text-slate-600 text-justify"><strong>Uso:</strong> Para transporte de materiais, equipamentos, insumos, bens móveis e transporte de pessoal exclusivamente em serviço público.</p>
+                        <div class="tooltip-container" data-citation="Art. 4º: 'Veículos de serviço são aqueles empregados no transporte de materiais, equipamentos, insumos, bens móveis e no transporte de pessoal exclusivamente em serviço público.'">
+                            <p class="mb-4 text-slate-600 text-justify"><strong>Uso:</strong> Para transporte de materiais, equipamentos, insumos, bens móveis e transporte de pessoal exclusivamente em serviço público.</p>
+                            <span class="tooltip-text"></span>
+                        </div>
                         <ul class="list-disc pl-5 space-y-2 text-slate-600 text-justify">
-                            <li>Serão utilizados de modo compartilhado entre os setores.</li>
-                            <li>Devem ser obrigatoriamente identificados visualmente (se da frota própria ou locados).</li>
-                            <li>Devem ser recolhidos diariamente na unidade de lotação, sendo proibido o pernoite em residências.</li>
+                            <li class="tooltip-container" data-citation="Art. 4º, § 1º: 'Serão utilizados de modo compartilhado entre os setores, visando à otimização da frota.'">
+                                Serão utilizados de modo compartilhado entre os setores.
+                                <span class="tooltip-text"></span>
+                            </li>
+                            <li class="tooltip-container" data-citation="Art. 4º, § 2º: 'Todos os veículos de serviço, sejam próprios ou locados, deverão possuir identificação visual obrigatória.'">
+                                Devem ser obrigatoriamente identificados visualmente (se da frota própria ou locados).
+                                <span class="tooltip-text"></span>
+                            </li>
+                            <li class="tooltip-container" data-citation="Art. 8º, I: 'Os veículos de serviço devem ser recolhidos diariamente na unidade de lotação ao final do expediente. É proibido o pernoite em residências.'">
+                                Devem ser recolhidos diariamente na unidade de lotação, sendo proibido o pernoite em residências.
+                                <span class="tooltip-text"></span>
+                            </li>
                         </ul>
                         <div class="mt-6 pt-4 border-t border-slate-200">
                            <h4 class="font-semibold text-slate-900 mb-2">Critérios para Baixa da Frota</h4>
                            <div class="grid sm:grid-cols-2 gap-4 text-center">
-                               <div class="bg-slate-50 p-4 rounded-lg">
+                               <div class="bg-slate-50 p-4 rounded-lg tooltip-container" data-citation="Art. 25, I: 'Os veículos com mais de 4 rodas poderão ser baixados após atingirem 300.000 km rodados.'">
                                    <p class="text-sm text-slate-500">Quilometragem</p>
                                    <p class="text-2xl font-bold text-slate-800">300.000 km</p>
                                    <p class="text-xs text-slate-500">(Veículos 4+ rodas)</p>
+                                   <span class="tooltip-text"></span>
                                </div>
-                               <div class="bg-slate-50 p-4 rounded-lg">
+                               <div class="bg-slate-50 p-4 rounded-lg tooltip-container" data-citation="Art. 25, II: 'O limite de idade para baixa de veículos movidos a gasolina ou diesel é de 10 a 12 anos, respectivamente.'">
                                    <p class="text-sm text-slate-500">Tempo de Uso</p>
                                    <p class="text-2xl font-bold text-slate-800">10-12 anos</p>
                                    <p class="text-xs text-slate-500">(Gasolina/Diesel)</p>
+                                   <span class="tooltip-text"></span>
                                </div>
                            </div>
                         </div>
@@ -323,6 +602,7 @@
             function updateTabContent(tabKey) {
                 const data = tabData[tabKey];
                 tabContentContainer.innerHTML = `<h3 class="text-xl font-semibold mb-4">${data.title}</h3>${data.content}`;
+                attachTooltipEvents();
             }
 
             tabButtons.forEach(button => {
@@ -338,6 +618,53 @@
             });
 
             updateTabContent('representacao');
+
+            function attachTooltipEvents() {
+                const tooltipContainers = document.querySelectorAll('.tooltip-container');
+                tooltipContainers.forEach(container => {
+                    const tooltipText = container.querySelector('.tooltip-text');
+                    const citation = container.getAttribute('data-citation');
+                    tooltipText.textContent = citation;
+
+                    container.addEventListener('mouseover', (event) => {
+                        if (window.innerWidth >= 768) {
+                            tooltipText.style.visibility = 'visible';
+                            tooltipText.style.opacity = '1';
+                        }
+                    });
+                    container.addEventListener('mouseout', (event) => {
+                        if (window.innerWidth >= 768) {
+                            tooltipText.style.visibility = 'hidden';
+                            tooltipText.style.opacity = '0';
+                        }
+                    });
+
+                    container.addEventListener('click', (event) => {
+                        event.stopPropagation();
+                        if (activeTooltip && activeTooltip !== tooltipText) {
+                            activeTooltip.style.visibility = 'hidden';
+                            activeTooltip.style.opacity = '0';
+                        }
+                        if (tooltipText.style.visibility === 'visible') {
+                            tooltipText.style.visibility = 'hidden';
+                            tooltipText.style.opacity = '0';
+                            activeTooltip = null;
+                        } else {
+                            tooltipText.style.visibility = 'visible';
+                            tooltipText.style.opacity = '1';
+                            activeTooltip = tooltipText;
+                        }
+                    });
+                });
+            }
+
+            document.addEventListener('click', (event) => {
+                if (activeTooltip) {
+                    activeTooltip.style.visibility = 'hidden';
+                    activeTooltip.style.opacity = '0';
+                    activeTooltip = null;
+                }
+            });
 
             const ctx = document.getElementById('fuelChart').getContext('2d');
             new Chart(ctx, {
@@ -365,9 +692,7 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: {
-                            display: false
-                        },
+                        legend: { display: false },
                         tooltip: {
                             backgroundColor: '#1e293b',
                             titleFont: { size: 14 },
@@ -377,26 +702,13 @@
                         }
                     },
                     scales: {
-                        x: {
-                            beginAtZero: true,
-                            grid: {
-                                color: '#e2e8f0'
-                            },
-                            ticks: {
-                                color: '#475569'
-                            }
-                        },
-                        y: {
-                            grid: {
-                                display: false
-                            },
-                            ticks: {
-                                color: '#334155'
-                            }
-                        }
+                        x: { beginAtZero: true, grid: { color: '#e2e8f0' }, ticks: { color: '#475569' } },
+                        y: { grid: { display: false }, ticks: { color: '#334155' } }
                     }
                 }
             });
+
+            attachTooltipEvents();
         });
     </script>
 </body>
