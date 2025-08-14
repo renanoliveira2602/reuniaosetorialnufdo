@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Chosen Palette: Slate & Amber -->
     <!-- Application Structure Plan: A single-page dashboard with a sticky top navigation bar for quick access to thematic sections (Visão Geral, Regras Essenciais, Veículos, Condutor, Processos). This structure is task-oriented, allowing users to quickly find specific information (e.g., prohibitions, authorization steps) rather than navigating a linear slide deck. Interactive elements like tabs for vehicle categories and toggles for duties/prohibitions reduce cognitive load and improve usability. The new "Scenario Assistant" section uses the Gemini API to provide personalized guidance based on the document's content, further enhancing the app's utility as a practical reference tool. -->
-    <!-- Visualization & Content Choices: 
+    <!-- Visualization & Content Choices:
         - Fuel Quotas: Report Info -> Compare quotas. Goal -> Inform. Viz/Method -> Horizontal Bar Chart (Chart.js). Interaction -> Tooltips. Justification -> Faster comprehension than text.
         - Authorization Process: Report Info -> 5 steps to get authorized. Goal -> Instruct. Viz/Method -> HTML/CSS vertical step-flow diagram. Interaction -> Hover effects. Justification -> More intuitive than a simple list for a process.
         - Duties vs. Prohibitions: Report Info -> Lists of allowed/disallowed actions. Goal -> Compare/Inform. Viz/Method -> Two-column toggleable lists with icons. Interaction -> Click to show/hide lists. Justification -> Reduces information overload and provides focused answers.
@@ -431,39 +431,55 @@
                 }
             });
 
-            // Gemini API Integration
-            const documentContent = "Instrução Normativa Nº 08/2025 - DER-DF.\n\n# Seção: Visão Geral - ID 'visao-geral'\nPropósito: Disciplinar o uso da frota oficial para fins institucionais.\n\n# Seção: Regras Essenciais - ID 'regras-essenciais'\nDeveres do Condutor:\n- Manter o veículo limpo e conservado.\n- Verificar diariamente níveis de óleo, água, pneus e freios.\n- Comunicar imediatamente qualquer problema à Gerência de Transporte.\n- Em caso de sinistro, solicitar perícia policial.\n- Usar cinto de segurança e exigir que os passageiros usem.\n- Preencher a Guia de Autorização e Movimentação de Veículos.\nProibições:\n- Usar o veículo para fins particulares (supermercados, clubes, residências).\n- Transportar familiares ou pessoas estranhas ao serviço.\n- Ceder a direção do veículo a terceiros não autorizados.\n- Conduzir sob efeito de álcool ou substâncias psicoativas.\n- Recolher veículos de serviço em garagem residencial.\n- Conduzir com trajes inadequados (bermudas, chinelos, camisa sem mangas).\n\n# Seção: Veículos - ID 'veiculos'\nVeículos de Representação: Uso restrito ao Presidente e diretores. Podem ter identificação dispensada e exceção à regra de recolhimento diário.\nVeículos de Transporte Institucional: Para fiscalização e operações. Devem ser identificados e recolhidos diariamente. Guinchos não têm limite de cota de combustível.\nVeículos de Serviço: Para transporte de materiais e pessoal em serviço. Devem ser compartilhados e recolhidos diariamente na unidade de lotação.\n\n# Seção: O Condutor - ID 'condutor'\nInfrações e Sinistros:\n- O condutor é responsável pelo pagamento de multas.\n- O condutor poderá ser responsabilizado pelos custos de reparo se o sinistro for causado por imperícia, imprudência ou mau uso.\nProcesso de Autorização: Preencher anexos I e II, obter assinatura, apresentar CNH válida e aguardar análise.\n\n# Seção: Processos - ID 'processos'\nProcesso de Abastecimento: Uso de cartão magnético em postos credenciados, informando placa, quilometragem, código e senha.\nProcesso de Manutenção: A unidade de lotação do veículo é responsável por encaminhá-lo para revisões.";
+            // Gemini API Integration - Code has been updated for better robustness and error handling.
+            const documentContent = `
+            Instrução Normativa Nº 08/2025 - DER-DF.
+            Visão Geral (ID:visao-geral): Propósito é disciplinar o uso da frota para fins institucionais. O uso é exclusivo para atividades de serviço. Toda utilização exige autorização e registro.
+            Regras Essenciais (ID:regras-essenciais):
+            Deveres: Manter veículo limpo, verificar níveis, comunicar problemas, solicitar perícia em sinistro, usar cinto, preencher guia de autorização.
+            Proibições: Usar para fins particulares, transportar familiares, ceder a direção, conduzir embriagado, recolher veículo em garagem residencial, dirigir com trajes inadequados.
+            Veículos (ID:veiculos):
+            I. Veículos de Representação: Uso restrito à Diretoria. Identificação visual dispensada. Não precisam recolher diariamente. Não tem cota de combustível.
+            II. Veículos de Transporte Institucional: Uso em fiscalização e operações. Identificação obrigatória. Abastecimento após plantão (viaturas/guinchos). Guinchos não têm cota.
+            III. Veículos de Serviço: Uso compartilhado para transporte de materiais e pessoal em serviço. Identificação obrigatória. Recolhimento diário obrigatório em unidade do DER-DF. Critérios de baixa: 300.000 km ou 10-12 anos de uso.
+            Condutor (ID:condutor):
+            Processo de Autorização: 1. Preencher Anexo I e II; 2. Assinar com a chefia; 3. Apresentar CNH; 4. Análise pela Superintendência.
+            Infrações e Sinistros: Condutor responsável por multas. Pode ser responsabilizado por custos de sinistro se for por mau uso/imprudência.
+            Processos (ID:processos):
+            Abastecimento: Cartão magnético em postos credenciados, dados pessoais e intransferíveis.
+            Manutenção: Unidade de lotação é responsável por encaminhar o veículo para revisões.
+            `;
 
             sendScenarioBtn.addEventListener('click', async () => {
-                const userScenario = scenarioInput.value.trim();
-                if (userScenario === '') return;
+                const prompt = scenarioInput.value.trim();
+                if (!prompt) {
+                    scenarioOutput.innerHTML = '<p class="text-red-500">Por favor, digite um cenário ou uma pergunta.</p>';
+                    scenarioOutput.classList.remove('hidden');
+                    return;
+                }
 
-                sendScenarioBtn.disabled = true;
-                loadingIndicator.classList.remove('hidden');
                 scenarioOutput.classList.add('hidden');
-                scenarioOutput.innerHTML = '';
+                loadingIndicator.classList.remove('hidden');
+                sendScenarioBtn.disabled = true;
 
                 try {
+                    const fullPrompt = `Você é um assistente de IA focado em fornecer orientações precisas com base no seguinte documento da Instrução Normativa 08/2025 do DER-DF. Use apenas as informações fornecidas e não adicione informações externas. Responda de forma clara, objetiva e em português.
+
+Documento de Referência:
+"""
+${documentContent}
+"""
+
+Cenário ou Pergunta do usuário:
+"""
+${prompt}
+"""
+
+Responda apenas com a orientação baseada no documento.`;
+
                     let chatHistory = [];
-                    const prompt = `Você é um assistente de IA focado em ajudar condutores do DER-DF com dúvidas sobre as regras da frota oficial. Sua tarefa é responder à pergunta do usuário estritamente com base no texto da Instrução Normativa fornecido abaixo. Se a informação não estiver no texto, responda que a norma não aborda o tema.
+                    chatHistory.push({ role: "user", parts: [{ text: fullPrompt }] });
 
-                    No final da sua resposta, adicione o ID da seção mais relevante para a resposta, usando o formato [ID:<id_da_seção>]. Por exemplo: [ID:regras-essenciais]. Se a informação não estiver no texto, responda que a norma não aborda o tema e não inclua um ID.
-
-                    SEÇÕES DISPONÍVEIS:
-                    Visão Geral: id 'visao-geral'
-                    Regras Essenciais: id 'regras-essenciais'
-                    Veículos: id 'veiculos'
-                    O Condutor: id 'condutor'
-                    Processos: id 'processos'
-
-                    INSTRUÇÃO NORMATIVA:
-                    ${documentContent}
-
-                    PERGUNTA DO USUÁRIO:
-                    ${userScenario}`;
-
-                    chatHistory.push({ role: "user", parts: [{ text: prompt }] });
-                    
                     const payload = { contents: chatHistory };
                     const apiKey = "";
                     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
@@ -474,37 +490,27 @@
                         body: JSON.stringify(payload)
                     });
 
+                    if (!response.ok) {
+                        throw new Error(`Erro na API: ${response.statusText}`);
+                    }
+
                     const result = await response.json();
-
-                    let responseText = 'Não foi possível gerar uma resposta. Tente novamente.';
-                    if (result.candidates && result.candidates.length > 0 &&
-                        result.candidates[0].content && result.candidates[0].content.parts &&
-                        result.candidates[0].content.parts.length > 0) {
-                        responseText = result.candidates[0].content.parts[0].text;
-                    }
-
-                    const idMatch = responseText.match(/\[ID:(.*?)\]/);
-                    let linkHtml = '';
-                    let cleanedText = responseText;
-
-                    if (idMatch) {
-                        const sectionId = idMatch[1];
-                        cleanedText = responseText.replace(idMatch[0], '').trim();
-                        // This check ensures we don't crash if the element doesn't exist
-                        const sectionElement = document.querySelector(`#${sectionId}`);
-                        if (sectionElement) {
-                             const sectionTitle = sectionElement.querySelector('h2').innerText;
-                             linkHtml = `<a href="#${sectionId}" class="link-to-section">Ver na seção "${sectionTitle}"</a>`;
-                        }
-                    }
                     
-                    scenarioOutput.innerHTML = cleanedText.replace(/\n/g, '<br>') + (linkHtml ? `<br><br>${linkHtml}` : '');
+                    const text = result?.candidates?.[0]?.content?.parts?.[0]?.text;
 
+                    if (text) {
+                        scenarioOutput.innerHTML = `<p>${text}</p>`;
+                    } else {
+                        scenarioOutput.innerHTML = '<p class="text-red-500">Não foi possível obter uma resposta. Tente novamente mais tarde.</p>';
+                    }
+
+                    scenarioOutput.classList.remove('hidden');
                 } catch (error) {
-                    scenarioOutput.innerHTML = 'Ocorreu um erro ao conectar com o assistente. Por favor, tente novamente mais tarde.';
+                    console.error('Erro ao chamar a API:', error);
+                    scenarioOutput.innerHTML = `<p class="text-red-500">Ocorreu um erro ao processar sua solicitação. Por favor, tente novamente.</p>`;
+                    scenarioOutput.classList.remove('hidden');
                 } finally {
                     loadingIndicator.classList.add('hidden');
-                    scenarioOutput.classList.remove('hidden');
                     sendScenarioBtn.disabled = false;
                 }
             });
