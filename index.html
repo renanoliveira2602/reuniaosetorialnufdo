@@ -260,14 +260,8 @@
 
     <footer class="bg-slate-800 text-white">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
-            <p class="font-semibold mb-2">É obrigação de todo condutor conhecer e cumprir esta norma.</p>
-            <p class="text-sm text-slate-300 mb-4">O descumprimento pode resultar em sanções disciplinares.</p>
-            <div class="flex justify-center space-x-4">
-                 <span class="font-medium">Anexos:</span>
-                 <span class="text-slate-300">I - Ficha de Cadastro</span>
-                 <span class="text-slate-300">II - Termo de Responsabilidade</span>
-                 <span class="text-slate-300">III - Padrão Visual</span>
-            </div>
+            <p class="font-semibold mb-2">É obrigação de todo servidor conhecer e cumprir esta norma.</p>
+            <p class="text-sm text-slate-300">O descumprimento pode resultar em sanções disciplinares.</p>
         </div>
     </footer>
 
@@ -447,7 +441,7 @@
             Infrações e Sinistros: Condutor responsável por multas. Pode ser responsabilizado por custos de sinistro se for por mau uso/imprudência.
             Processos (ID:processos):
             Abastecimento: Cartão magnético em postos credenciados, dados pessoais e intransferíveis.
-            Manutenção: Unidade de lotação é responsável por encaminhar o veículo para revisões.
+            Manutenção: Unidade de lotação do veículo é responsável por encaminhá-lo para as revisões na Diretoria de Manutenção, respeitando os prazos de quilometragem ou tempo.
             `;
 
             sendScenarioBtn.addEventListener('click', async () => {
@@ -462,8 +456,7 @@
                 loadingIndicator.classList.remove('hidden');
                 sendScenarioBtn.disabled = true;
 
-                try {
-                    const fullPrompt = `Você é um assistente de IA focado em fornecer orientações precisas com base no seguinte documento da Instrução Normativa 08/2025 do DER-DF. Use apenas as informações fornecidas e não adicione informações externas. Responda de forma clara, objetiva e em português.
+                const fullPrompt = `Você é um assistente de IA focado em fornecer orientações precisas com base no seguinte documento da Instrução Normativa 08/2025 do DER-DF. Use apenas as informações fornecidas e não adicione informações externas. Responda de forma clara, objetiva e em português.
 
 Documento de Referência:
 """
@@ -477,41 +470,59 @@ ${prompt}
 
 Responda apenas com a orientação baseada no documento.`;
 
-                    let chatHistory = [];
-                    chatHistory.push({ role: "user", parts: [{ text: fullPrompt }] });
+                let delay = 1000; // 1 second
+                const maxRetries = 3;
 
-                    const payload = { contents: chatHistory };
-                    const apiKey = "";
-                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+                for (let i = 0; i < maxRetries; i++) {
+                    try {
+                        let chatHistory = [];
+                        chatHistory.push({ role: "user", parts: [{ text: fullPrompt }] });
 
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
+                        const payload = { contents: chatHistory };
+                        const apiKey = "";
+                        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
 
-                    if (!response.ok) {
-                        throw new Error(`Erro na API: ${response.statusText}`);
+                        const response = await fetch(apiUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+
+                        if (!response.ok) {
+                            if (response.status === 429 && i < maxRetries - 1) {
+                                // Too many requests, try again
+                                await new Promise(resolve => setTimeout(resolve, delay));
+                                delay *= 2; // Exponential backoff
+                                continue;
+                            }
+                            throw new Error(`Erro na API: ${response.statusText}`);
+                        }
+
+                        const result = await response.json();
+                        const text = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                        if (text) {
+                            scenarioOutput.innerHTML = `<p>${text}</p>`;
+                        } else {
+                            scenarioOutput.innerHTML = '<p class="text-red-500">Não foi possível obter uma resposta. Ocorreu um erro no formato da resposta da IA.</p>';
+                        }
+
+                        scenarioOutput.classList.remove('hidden');
+                        break; // Exit the loop on success
+
+                    } catch (error) {
+                        console.error('Erro ao chamar a API:', error);
+                        if (i === maxRetries - 1) {
+                             scenarioOutput.innerHTML = `<p class="text-red-500">Ocorreu um erro ao processar sua solicitação após várias tentativas. Por favor, tente novamente mais tarde.</p>`;
+                             scenarioOutput.classList.remove('hidden');
+                        } else {
+                            await new Promise(resolve => setTimeout(resolve, delay));
+                            delay *= 2;
+                        }
+                    } finally {
+                        loadingIndicator.classList.add('hidden');
+                        sendScenarioBtn.disabled = false;
                     }
-
-                    const result = await response.json();
-                    
-                    const text = result?.candidates?.[0]?.content?.parts?.[0]?.text;
-
-                    if (text) {
-                        scenarioOutput.innerHTML = `<p>${text}</p>`;
-                    } else {
-                        scenarioOutput.innerHTML = '<p class="text-red-500">Não foi possível obter uma resposta. Tente novamente mais tarde.</p>';
-                    }
-
-                    scenarioOutput.classList.remove('hidden');
-                } catch (error) {
-                    console.error('Erro ao chamar a API:', error);
-                    scenarioOutput.innerHTML = `<p class="text-red-500">Ocorreu um erro ao processar sua solicitação. Por favor, tente novamente.</p>`;
-                    scenarioOutput.classList.remove('hidden');
-                } finally {
-                    loadingIndicator.classList.add('hidden');
-                    sendScenarioBtn.disabled = false;
                 }
             });
         });
