@@ -4,15 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel de Acesso às Normativas - DER/DF</title>
+    <!-- Inclui a biblioteca Tailwind CSS para estilização rápida e responsiva -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Preconnect para otimizar o carregamento das fontes do Google -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Fonte "Inter" do Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     
     <style>
+        /* Estilo base para o corpo do documento e tipografia */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8fafc; /* slate-50 */
+            background-color: #f8fafc; /* Cor de fundo suave (slate-50) */
+            color: #1e293b; /* Cor do texto principal (slate-800) */
         }
         /* Estilos para ocultar as páginas por padrão */
         .page {
@@ -22,36 +27,38 @@
         .page.active {
             display: block;
         }
+        /* Estilos do cabeçalho principal */
         .main-header {
-            background-color: #1e293b;
+            background-color: #1e293b; /* Cor de fundo escura */
             color: white;
         }
-        /* Estilos para o componente de tooltip (dica de ferramenta) */
+        /* Contêiner do tooltip (dica de ferramenta) */
         .tooltip-container {
             position: relative;
             display: inline-block;
             cursor: pointer;
         }
+        /* Estilos do conteúdo do tooltip */
         .tooltip-content {
             visibility: hidden;
-            background-color: #1e293b; /* slate-900 */
+            background-color: #1e293b;
             color: #fff;
             text-align: left;
             border-radius: 6px;
             padding: 10px;
             position: absolute;
             z-index: 10;
-            bottom: 125%;
+            bottom: 125%; /* Posição acima do elemento */
             left: 50%;
             transform: translateX(-50%);
             opacity: 0;
             transition: opacity 0.3s, visibility 0.3s;
-            width: 90vw;
-            max-width: 350px;
-            word-wrap: break-word;
-            /* Garante que o tooltip não seja cortado por um overflow */
-            pointer-events: none;
+            width: 90vw; /* Usa a largura da tela para mobile */
+            max-width: 350px; /* Limite de largura para desktop */
+            word-wrap: break-word; /* Quebra de linha para textos longos */
+            pointer-events: none; /* Impede que o tooltip interfira com o clique */
         }
+        /* Seta do tooltip */
         .tooltip-content::after {
             content: "";
             position: absolute;
@@ -77,7 +84,7 @@
             overflow: hidden;
         }
         .card-content.show {
-            max-height: 1000px; /* Valor grande para permitir expansão */
+            max-height: 1000px; /* Valor grande para permitir a expansão */
             opacity: 1;
         }
         /* Estilos para o conteúdo das abas */
@@ -93,9 +100,17 @@
             color: #3b82f6;
             background-color: #eff6ff; /* blue-50 */
         }
-        /* Garante que o tooltip apareça acima do conteúdo quando o usuário interage */
-        .z-index-tooltip {
-            z-index: 20;
+        /* Estilos para o calendário */
+        .calendar-grid div {
+            padding: 0.5rem;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+            text-align: center;
+            font-weight: 600;
+        }
+        .calendar-grid div:hover {
+            transform: scale(1.05);
         }
     </style>
 </head>
@@ -121,6 +136,9 @@
                 </button>
                 <button onclick="showPage('guide-2')" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 px-6 rounded-lg transition-colors duration-300 transform hover:scale-105 shadow-lg">
                     Guia da Instrução Normativa Nº 22/2019
+                </button>
+                <button onclick="showPage('guide-3')" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 px-6 rounded-lg transition-colors duration-300 transform hover:scale-105 shadow-lg">
+                    Adoção da escala 24 X 72 - IN Nº 29/2019
                 </button>
             </div>
         </section>
@@ -468,7 +486,7 @@
                     <span class="text-2xl text-blue-500">💼</span>
                     <span class="tooltip-container">
                         <h3 class="text-lg font-bold text-slate-900">Regime de 40 Horas Semanais</h3>
-                        <p class="text-slate-700 mt-1 text-justify">A chefia imediata tem a prerrogativa de manter o regime de trabalho de 40 horas semanais, por conveniência e mediante justificativa.</p>
+                        <p class="text-slate-700 mt-1 text-justify">A chefia imediata, por conveniência e mediante justificativa, pode manter o regime de trabalho de quarenta horas semanais.</p>
                         <span class="tooltip-content">
                             Art. 2º: A chefia imediata, por conveniência e mediante justificativa, poderá manter o regime de trabalho de quarenta horas semanais.
                         </span>
@@ -484,10 +502,208 @@
             </div>
         </section>
 
+        <!-- Guia 3: Adoção da escala 24 x 72 - IN Nº 29/2019 -->
+        <section id="guide-3" class="page">
+            <div class="flex justify-end mb-6">
+                <button onclick="showPage('home-page')" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold py-2 px-4 rounded-lg transition-colors duration-300">
+                    Voltar
+                </button>
+            </div>
+            
+            <h2 class="text-2xl font-bold text-slate-900 mb-2 text-center">Adoção da Escala 24 X 72 - IN Nº 29/2019</h2>
+            <p class="text-slate-600 mb-8 text-center max-w-3xl mx-auto text-justify">Esta instrução normativa disciplina a escala de 24 horas por 72 horas de descanso para servidores do DER/DF.</p>
+
+            <!-- Container principal para os dois calendários, garantindo alinhamento e espaçamento harmoniosos -->
+            <div class="flex flex-col lg:flex-row gap-8 justify-center items-stretch">
+                <!-- CALENDÁRIO 1: Escala atual a ser corrigida (com a lógica de 12 horas) -->
+                <div class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-lg flex flex-col justify-between">
+                    <div>
+                        <h1 class="text-2xl sm:text-3xl font-bold text-center mb-6 text-slate-900">Escala atual a ser corrigida</h1>
+
+                        <div class="flex justify-between items-center mb-6">
+                            <button id="prevBtn1" class="bg-slate-200 hover:bg-slate-300 text-slate-800 p-2 rounded-full transition-colors duration-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                                </svg>
+                            </button>
+                            <h2 id="monthYear1" class="text-xl font-bold capitalize text-slate-900"></h2>
+                            <button id="nextBtn1" class="bg-slate-200 hover:bg-slate-300 text-slate-800 p-2 rounded-full transition-colors duration-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div class="grid grid-cols-7 text-center font-semibold text-slate-400 mb-2">
+                            <div>Dom</div><div>Seg</div><div>Ter</div><div>Qua</div><div>Qui</div><div>Sex</div><div>Sáb</div>
+                        </div>
+
+                        <div id="calendarGrid1" class="grid grid-cols-7 gap-2 text-center calendar-grid"></div>
+
+                        <!-- Legenda adicionada aqui -->
+                        <p class="text-sm text-slate-400 mt-4 text-center">As cores no calendário representam a escala de dois fiscais na escala de 12 x 36.</p>
+                    </div>
+                    
+                    <div class="mt-8 text-left">
+                        <div class="flex flex-col items-start gap-4">
+                            <div class="flex items-center gap-2">
+                                <div class="w-6 h-6 bg-yellow-500 rounded"></div>
+                                <p id="totalHoursAlfa_1" class="text-lg font-semibold text-slate-800">Equipe Alfa</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <div class="w-6 h-6 bg-blue-500 rounded"></div>
+                                <p id="totalHoursBravo_1" class="text-lg font-semibold text-slate-800">Equipe Bravo</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CALENDÁRIO 2: Escala 24 X 72, conforme a IN 29 de 2019 (com a lógica de 24 horas) -->
+                <div class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-lg flex flex-col justify-between">
+                    <div>
+                        <h1 class="text-2xl sm:text-3xl font-bold text-center mb-6 text-slate-900">Escala 24 X 72, conforme a IN 29 de 2019</h1>
+
+                        <div class="flex justify-between items-center mb-6">
+                            <button id="prevBtn2" class="bg-slate-200 hover:bg-slate-300 text-slate-800 p-2 rounded-full transition-colors duration-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                                </svg>
+                            </button>
+                            <h2 id="monthYear2" class="text-xl font-bold capitalize text-slate-900"></h2>
+                            <button id="nextBtn2" class="bg-slate-200 hover:bg-slate-300 text-slate-800 p-2 rounded-full transition-colors duration-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div class="grid grid-cols-7 text-center font-semibold text-slate-400 mb-2">
+                            <div>Dom</div><div>Seg</div><div>Ter</div><div>Qua</div><div>Qui</div><div>Sex</div><div>Sáb</div>
+                        </div>
+
+                        <div id="calendarGrid2" class="grid grid-cols-7 gap-2 text-center calendar-grid"></div>
+
+                        <!-- Legenda adicionada aqui -->
+                        <p class="text-sm text-slate-400 mt-4 text-center">As cores no calendário representam a escala de quatro fiscais na escala 24 x 72.</p>
+                    </div>
+                    
+                    <div class="mt-8 text-left">
+                        <div class="flex flex-col items-start gap-4">
+                            <!-- Cores da Escala 24x72 conforme a regra do usuário: 1=amarelo, 2=verde, 3=azul, 4=branco -->
+                            <div class="flex items-center gap-2">
+                                <div class="w-6 h-6 bg-yellow-500 rounded"></div>
+                                <p id="totalHoursAlfa01_2" class="text-lg font-semibold text-slate-800">Equipe Alfa 01</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <div class="w-6 h-6 bg-emerald-500 rounded"></div>
+                                <p id="totalHoursAlfa02_2" class="text-lg font-semibold text-slate-800">Equipe Alfa 02</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <div class="w-6 h-6 bg-blue-500 rounded"></div>
+                                <p id="totalHoursBravo01_2" class="text-lg font-semibold text-slate-800">Equipe Bravo 01</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <div class="w-6 h-6 bg-slate-200 rounded"></div>
+                                <p id="totalHoursBravo02_2" class="text-lg font-semibold text-slate-800">Equipe Bravo 02</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Seção de resumo da Instrução Normativa, agora integrada ao mesmo painel -->
+            <div class="max-w-4xl mx-auto bg-white p-8 rounded-2xl shadow-lg mt-8 text-slate-800">
+                <h2 class="text-2xl font-bold text-center mb-6 text-slate-900">Resumo da Instrução Normativa Nº 29/2019</h2>
+                <div class="text-lg space-y-6 text-justify">
+                    <p>
+                        A Instrução Normativa Nº 29, de 31 de dezembro de 2019, foi emitida pelo Departamento de Estradas de Rodagem do Distrito Federal (DER/DF). Seu principal objetivo é instituir a escala de <strong>24 horas de trabalho por 72 horas de descanso</strong> para os servidores que atuam em unidades que exigem serviços ininterruptos, como os de plantão.
+                    </p>
+                    <h4 class="text-xl font-bold text-slate-900">Pontos Principais da Norma:</h4>
+                    <ol class="list-decimal list-inside space-y-2 ml-4">
+                        <li>
+                            <strong>Carga Horária Mensal:</strong> A escala de 24h x 72h resulta na execução de <strong>7 ou 8 plantões por mês</strong>. Isso corresponde a uma carga horária mensal de <strong>168 horas</strong> (para 7 plantões) ou <strong>192 horas</strong> (para 8 plantões).
+                        </li>
+                        <li>
+                            <strong>Refeições:</strong> Durante o plantão de 24 horas, o servidor tem direito a dois períodos de 60 minutos (totalizando 2 horas) para a realização de refeições.
+                        </li>
+                        <li>
+                            <strong>Permuta de Plantões:</strong> A troca de plantões entre servidores é permitida, mas deve ser solicitada formalmente com antecedência de 72 horas e ser autorizada pela chefia imediata. Há regras rígidas para as permutas:
+                            <ul class="list-disc list-inside space-y-1 ml-4 mt-2">
+                                <li>Não é permitido que o servidor trabalhe por mais de <strong>24 horas consecutivas</strong>.</li>
+                                <li>Deve haver um intervalo mínimo de <strong>12 horas</strong> de descanso entre o fim de um plantão e o início de outro.</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>Abono de Ponto:</strong> A norma garante o direito a abono de ponto para os servidores que trabalham nesta escala de revezamento.
+                        </li>
+                        <li>
+                            <strong>Recesso de Final de Ano:</strong> Nos casos de recesso, o servidor em escala de 24h x 72h fará jus a um plantão de 24 horas de folga. Essa folga, concedida em razão do recesso, <strong>não pode ser acumulada</strong> com outras horas excedentes (HE) a que o servidor tem direito.
+                        </li>
+                    </ol>
+
+                    <h4 class="text-xl font-bold mt-6 text-slate-900">Análise Detalhada da Compensação de Horas Excedentes (HE)</h4>
+                    <p>
+                        A Instrução Normativa prevê formas de compensação para os meses em que a escala de revezamento gera horas de trabalho além da carga horária padrão de 160 horas. A forma de compensação varia dependendo do número de plantões realizados:
+                    </p>
+
+                    <h5 class="text-lg font-bold text-slate-900">1. Compensação para 8 plantões:</h5>
+                    <ul class="list-disc list-inside space-y-2 ml-4">
+                        <li>
+                            Nos meses em que o servidor realizar <strong>8 plantões</strong>, totalizando 192 horas mensais, ele fará jus a uma folga de 24 horas.
+                        </li>
+                        <li>
+                            Essa folga deve ser gozada <strong>obrigatoriamente no mês em que a ocorrência se der</strong>.
+                        </li>
+                        <li>
+                            A decisão sobre o dia exato para a folga (sexta-feira ou sábado) e a forma escalonada de concessão fica a critério da chefia imediata.
+                        </li>
+                    </ul>
+
+                    <h5 class="text-lg font-bold mt-4 text-slate-900">2. Compensação para 7 plantões:</h5>
+                    <ul class="list-disc list-inside space-y-2 ml-4">
+                        <li>
+                            A norma estabelece que as horas excedentes (HE) relativas ao cumprimento do regime de trabalho (totalizando 8 horas por mês) podem ser compensadas na escala.
+                        </li>
+                        <li>
+                            Essa compensação pode ser gozada <strong>no mês de aquisição ou em outro período</strong>, desde que <strong>não ultrapasse 3 (três) meses de sua aquisição</strong>.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="flex justify-center mt-8 mb-12">
+                <a href="https://www.sinj.df.gov.br/sinj/Norma/95a5d5f1bcb544498302a8217b8341a5/Instru_o_Normativa_29_31_12_2019.html" target="_blank" class="bg-slate-700 hover:bg-slate-800 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300 transform hover:scale-105 shadow-md">
+                    Texto Integral da Norma
+                </a>
+            </div>
+
+        </section>
+
     </main>
 
+    <!-- Rodapé adicionado aqui, com classes para ser responsivo e manter o estilo tradicional -->
+    <footer class="bg-slate-800 text-white text-center py-4 mt-12 shadow-inner">
+        <div class="container mx-auto px-4">
+            <p class="text-sm font-light">&copy; NUFDO 2025</p>
+        </div>
+    </footer>
+
+    <!-- Modal para exibir mensagens (compartilhado pelos dois calendários) -->
+    <div id="messageModal" class="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center p-4 hidden z-50">
+        <div class="bg-white text-slate-900 p-6 rounded-xl shadow-2xl max-w-sm w-full relative">
+            <button id="closeModalBtn" class="absolute top-2 right-2 text-slate-500 hover:text-slate-900 text-2xl font-bold">&times;</button>
+            <h3 class="text-xl font-bold mb-2" id="modalTitle"></h3>
+            <p id="modalMessage" class="text-slate-700"></p>
+        </div>
+    </div>
+
     <script>
-        // Função para alternar a exibição das páginas
+        // --- FUNÇÕES GERAIS DE NAVEGAÇÃO E INTERAÇÃO ---
+
+        /**
+         * Alterna a visibilidade das páginas da aplicação.
+         * @param {string} pageId O ID da página a ser exibida.
+         */
         function showPage(pageId) {
             const pages = document.querySelectorAll('.page');
             pages.forEach(page => {
@@ -496,13 +712,20 @@
             document.getElementById(pageId).classList.add('active');
         }
         
-        // Função para mostrar/esconder o conteúdo do card na página da Instrução 08/2025
+        /**
+         * Alterna a visibilidade do conteúdo de um card.
+         * @param {string} cardId O ID do card.
+         */
         function toggleCard(cardId) {
             const card = document.getElementById(cardId);
             card.classList.toggle('show');
         }
 
-        // Função para alternar entre as abas na página da Instrução 08/2025
+        /**
+         * Alterna entre as abas na seção "Guia Rápido do Condutor".
+         * @param {Event} evt O evento de clique.
+         * @param {string} tabName O nome da aba a ser exibida.
+         */
         function openTab(evt, tabName) {
             var i, tabContent, tabButtons;
             tabContent = document.getElementsByClassName("tab-content");
@@ -516,6 +739,281 @@
             document.getElementById(tabName).classList.add('active');
             evt.currentTarget.classList.add("active");
         }
+
+        // --- FUNÇÕES E VARIÁVEIS DO CALENDÁRIO ---
+        
+        // Referências para os elementos do CALENDÁRIO 1
+        const monthYear1 = document.getElementById('monthYear1');
+        const calendarGrid1 = document.getElementById('calendarGrid1');
+        const prevBtn1 = document.getElementById('prevBtn1');
+        const nextBtn1 = document.getElementById('nextBtn1');
+        const totalHoursAlfa_1 = document.getElementById('totalHoursAlfa_1');
+        const totalHoursBravo_1 = document.getElementById('totalHoursBravo_1');
+
+        // Referências para os elementos do CALENDÁRIO 2
+        const monthYear2 = document.getElementById('monthYear2');
+        const calendarGrid2 = document.getElementById('calendarGrid2');
+        const prevBtn2 = document.getElementById('prevBtn2');
+        const nextBtn2 = document.getElementById('nextBtn2');
+        const totalHoursAlfa01_2 = document.getElementById('totalHoursAlfa01_2');
+        const totalHoursAlfa02_2 = document.getElementById('totalHoursAlfa02_2');
+        const totalHoursBravo01_2 = document.getElementById('totalHoursBravo01_2');
+        const totalHoursBravo02_2 = document.getElementById('totalHoursBravo02_2');
+        
+        // Referências para o modal de mensagens
+        const messageModal = document.getElementById('messageModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalMessage = document.getElementById('modalMessage');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+
+        // Define a data inicial (agosto de 2025)
+        let currentDate1 = new Date(2025, 7, 1);
+        let currentYear1 = currentDate1.getFullYear();
+        let currentMonth1 = currentDate1.getMonth();
+        
+        let currentDate2 = new Date(2025, 7, 1);
+        let currentYear2 = currentDate2.getFullYear();
+        let currentMonth2 = currentDate2.getMonth();
+
+        const months = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+
+        /**
+         * Determina a equipe para um dia específico com base na lógica de rodízio da Escala 24x72.
+         * A escala 24x72 funciona em um ciclo de 4 dias de trabalho, com equipes diferentes.
+         * Dia 1: Equipe Alfa 01
+         * Dia 2: Equipe Alfa 02
+         * Dia 3: Equipe Bravo 01
+         * Dia 4: Equipe Bravo 02
+         * @param {number} day O dia do mês.
+         * @returns {string | null} O nome da equipe.
+         */
+        function getTeamForDay24x72(day) {
+            const cycleDay = (day - 1) % 4;
+            if (cycleDay === 0) return "alfa01";
+            if (cycleDay === 1) return "alfa02";
+            if (cycleDay === 2) return "bravo01";
+            if (cycleDay === 3) return "bravo02";
+            return null;
+        }
+
+        /**
+         * Calcula e exibe o total de horas trabalhadas para a escala corrigida (12x36).
+         * @param {number} month O mês (0-11).
+         * @param {number} year O ano.
+         */
+        function calculateAndDisplayHoursCorrected(month, year) {
+            let alfaDays = 0;
+            let bravoDays = 0;
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const hoursPerDay = 12; // Carga horária de 12 horas por dia
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                // Checagem para os dias 9 e 10 de agosto de 2025 (Regras manuais)
+                if (year === 2025 && month === 7 && day === 9) {
+                    alfaDays++;
+                    continue;
+                }
+                if (year === 2025 && month === 7 && day === 10) {
+                    bravoDays++;
+                    continue;
+                }
+
+                const dayOfWeek = new Date(year, month, day).getDay();
+                // 1 = Segunda, 2 = Terça, 3 = Quarta, 4 = Quinta, 5 = Sexta
+                const isWeekday = dayOfWeek >= 1 && dayOfWeek <= 5;
+
+                if (isWeekday) {
+                    if (day % 2 !== 0) { // Dia ímpar
+                        alfaDays++;
+                    } else { // Dia par
+                        bravoDays++;
+                    }
+                }
+            }
+
+            totalHoursAlfa_1.textContent = `Equipe Alfa: ${alfaDays * hoursPerDay} horas`;
+            totalHoursBravo_1.textContent = `Equipe Bravo: ${bravoDays * hoursPerDay} horas`;
+        }
+        
+        /**
+         * Calcula e exibe o total de horas trabalhadas para cada equipe da escala 24x72.
+         * @param {number} hoursPerDay O número de horas por dia de trabalho.
+         * @param {number} month O mês (0-11).
+         * @param {number} year O ano.
+         */
+        function calculateAndDisplayHours24x72(hoursPerDay, month, year) {
+            let alfa01Days = 0;
+            let alfa02Days = 0;
+            let bravo01Days = 0;
+            let bravo02Days = 0;
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const team = getTeamForDay24x72(day);
+                if (team === "alfa01") alfa01Days++;
+                if (team === "alfa02") alfa02Days++;
+                if (team === "bravo01") bravo01Days++;
+                if (team === "bravo02") bravo02Days++;
+            }
+            
+            totalHoursAlfa01_2.textContent = `Equipe Alfa 01: ${alfa01Days * hoursPerDay} horas`;
+            totalHoursAlfa02_2.textContent = `Equipe Alfa 02: ${alfa02Days * hoursPerDay} horas`;
+            totalHoursBravo01_2.textContent = `Equipe Bravo 01: ${bravo01Days * hoursPerDay} horas`;
+            totalHoursBravo02_2.textContent = `Equipe Bravo 02: ${bravo02Days * hoursPerDay} horas`;
+        }
+
+
+        /**
+         * Gera e renderiza o calendário para o mês e ano especificados.
+         * @param {number} month O mês (0-11).
+         * @param {number} year O ano.
+         * @param {string} calendarGridId ID do grid do calendário.
+         * @param {string} monthYearId ID do elemento de mês/ano.
+         * @param {boolean} isCorrectedScale Se é o primeiro calendário com dados estáticos.
+         */
+        function generateCalendar(month, year, calendarGridId, monthYearId, isCorrectedScale) {
+            const calendarGrid = document.getElementById(calendarGridId);
+            const monthYearEl = document.getElementById(monthYearId);
+            if (!calendarGrid || !monthYearEl) return;
+            
+            calendarGrid.innerHTML = '';
+            monthYearEl.textContent = `${months[month]} ${year}`;
+
+            const firstDayOfMonth = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            for (let i = 0; i < firstDayOfMonth; i++) {
+                const emptyCell = document.createElement('div');
+                emptyCell.className = "p-2 rounded-lg";
+                calendarGrid.appendChild(emptyCell);
+            }
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayEl = document.createElement('div');
+                dayEl.textContent = day;
+                let team = null;
+
+                if (isCorrectedScale) {
+                     // Regras de exceção para agosto de 2025
+                    if (year === 2025 && month === 7 && day === 9) {
+                        team = "alfa";
+                    } else if (year === 2025 && month === 7 && day === 10) {
+                        team = "bravo";
+                    } else {
+                        const dayOfWeek = new Date(year, month, day).getDay();
+                        const isWeekday = dayOfWeek >= 1 && dayOfWeek <= 5;
+                        if (isWeekday) {
+                            if (day % 2 !== 0) {
+                                team = "alfa";
+                            } else {
+                                team = "bravo";
+                            }
+                        }
+                    }
+                } else {
+                    team = getTeamForDay24x72(day);
+                }
+
+                if (isCorrectedScale) {
+                    if (team === "alfa") {
+                        dayEl.classList.add("bg-yellow-500", "text-slate-900", "font-bold", "hover:bg-yellow-600");
+                    } else if (team === "bravo") {
+                        dayEl.classList.add("bg-blue-500", "text-white", "font-bold", "hover:bg-blue-600");
+                    } else {
+                        dayEl.classList.add("bg-slate-200", "hover:bg-slate-300");
+                    }
+                } else {
+                    // Lógica de cores para a escala 24x72 conforme a nova regra
+                    if (team === "alfa01") {
+                        dayEl.classList.add("bg-yellow-500", "text-slate-900", "font-bold", "hover:bg-yellow-600");
+                    } else if (team === "alfa02") {
+                        dayEl.classList.add("bg-emerald-500", "text-white", "font-bold", "hover:bg-emerald-600");
+                    } else if (team === "bravo01") {
+                        dayEl.classList.add("bg-blue-500", "text-white", "font-bold", "hover:bg-blue-600");
+                    } else if (team === "bravo02") {
+                        dayEl.classList.add("bg-slate-200", "text-slate-900", "font-bold", "hover:bg-slate-300");
+                    }
+                }
+                
+                dayEl.classList.add("p-2", "rounded-xl", "cursor-pointer", "transition-colors", "duration-200");
+                
+                dayEl.addEventListener('click', () => {
+                    let title = "Dia de Folga";
+                    let message = `O dia ${day} de ${months[month]} de ${year} é um dia de folga.`;
+                    if (isCorrectedScale) {
+                        if (team === 'alfa') {
+                            title = 'Dia de Serviço (Equipe Alfa)';
+                            message = `O dia ${day} de ${months[month]} de ${year} é um dia de serviço da Equipe Alfa (12h de trabalho).`;
+                        } else if (team === 'bravo') {
+                             title = 'Dia de Serviço (Equipe Bravo)';
+                             message = `O dia ${day} de ${months[month]} de ${year} é um dia de serviço da Equipe Bravo (12h de trabalho).`;
+                        }
+                    } else {
+                        if (team) {
+                            title = `Dia de Serviço (Equipe ${team.toUpperCase().replace('0',' 0')})`;
+                            message = `O dia ${day} de ${months[month]} de ${year} é um dia de serviço agendado na escala da Equipe ${team.toUpperCase().replace('0',' 0')}.`;
+                        }
+                    }
+                    showMessage(title, message);
+                });
+
+                calendarGrid.appendChild(dayEl);
+            }
+        }
+        
+        /**
+         * Exibe o modal com título e mensagem específicos.
+         * @param {string} title O título do modal.
+         * @param {string} message A mensagem a ser exibida.
+         */
+        function showMessage(title, message) {
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            messageModal.classList.remove('hidden');
+        }
+
+        /**
+         * Esconde o modal.
+         */
+        function hideMessage() {
+            modalTitle.textContent = '';
+            modalMessage.textContent = '';
+            messageModal.classList.add('hidden');
+        }
+
+        // Adiciona o event listener para fechar o modal
+        closeModalBtn.addEventListener('click', hideMessage);
+
+        // Funções para gerenciar a navegação do CALENDÁRIO 1
+        function handleNav1(delta) {
+            currentDate1.setMonth(currentDate1.getMonth() + delta);
+            currentYear1 = currentDate1.getFullYear();
+            currentMonth1 = currentDate1.getMonth();
+            generateCalendar(currentMonth1, currentYear1, 'calendarGrid1', 'monthYear1', true);
+            calculateAndDisplayHoursCorrected(currentMonth1, currentYear1);
+        }
+
+        // Funções para gerenciar a navegação do CALENDÁRIO 2
+        function handleNav2(delta) {
+            currentDate2.setMonth(currentDate2.getMonth() + delta);
+            currentYear2 = currentDate2.getFullYear();
+            currentMonth2 = currentDate2.getMonth();
+            generateCalendar(currentMonth2, currentYear2, 'calendarGrid2', 'monthYear2', false);
+            calculateAndDisplayHours24x72(24, currentMonth2, currentYear2);
+        }
+
+        // Event listeners para os botões de navegação
+        prevBtn1.addEventListener('click', () => handleNav1(-1));
+        nextBtn1.addEventListener('click', () => handleNav1(1));
+        prevBtn2.addEventListener('click', () => handleNav2(-1));
+        nextBtn2.addEventListener('click', () => handleNav2(1));
+
+        // Gera os calendários iniciais
+        generateCalendar(currentMonth1, currentYear1, 'calendarGrid1', 'monthYear1', true);
+        calculateAndDisplayHoursCorrected(currentMonth1, currentYear1);
+
+        generateCalendar(currentMonth2, currentYear2, 'calendarGrid2', 'monthYear2', false);
+        calculateAndDisplayHours24x72(24, currentMonth2, currentYear2);
     </script>
 </body>
 </html>
