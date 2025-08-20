@@ -112,6 +112,12 @@
         .calendar-grid div:hover {
             transform: scale(1.05);
         }
+        /* Classe para os dias desmarcados */
+        .unmarked-day {
+            background-color: #fee2e2; /* Cor de fundo vermelha clara (red-100) */
+            color: #b91c1c; /* Cor do texto vermelho escuro (red-700) */
+            border: 2px solid #ef4444; /* Borda vermelha para destaque */
+        }
     </style>
 </head>
 <!-- A correção foi feita aqui, usando flexbox para empurrar o rodapé para o final da página -->
@@ -477,7 +483,7 @@
                         <h3 class="text-lg font-bold text-slate-900">Flexibilidade para Fiscalização</h3>
                         <p class="text-slate-700 mt-1 text-justify">Para atender às necessidades de fiscalização, a chefia imediata pode ajustar o horário de trabalho dos servidores, mantendo a carga horária total de 12 horas.</p>
                         <span class="tooltip-content">
-                            Art. 1º, Inciso I, alínea a: visando ao atendimento de operações de fiscalização, a chefia imediata poderá escalar efetivo de servidores em horários diferentes do previsto no inciso I, sem, contudo, alterar a carga horária de trabalho de 12 horas;
+                            Art. 1º, Inciso I, alínea a: visando ao atendimento de operações de fiscalização, a chefia imediata poderá escalar efetivo de servidores em horários diferentes do previsto no inciso I, sem, contudo, alterar a carga horária de 12 horas;
                         </span>
                     </span>
                 </div>
@@ -590,18 +596,18 @@
                     
                     <div class="mt-8 text-left">
                         <div class="flex flex-col items-start gap-4">
-                            <!-- Cores da Escala 24x72 conforme a regra do usuário: 1=amarelo, 2=verde, 3=azul, 4=branco -->
+                            <!-- A ordem dos itens na legenda foi alterada para refletir a nova sequência: Alfa 01, Bravo 01, Alfa 02, Bravo 02 -->
                             <div class="flex items-center gap-2">
                                 <div class="w-6 h-6 bg-yellow-500 rounded"></div>
                                 <p id="totalHoursAlfa01_2" class="text-lg font-semibold text-slate-800">Equipe Alfa 01</p>
                             </div>
                             <div class="flex items-center gap-2">
-                                <div class="w-6 h-6 bg-emerald-500 rounded"></div>
-                                <p id="totalHoursAlfa02_2" class="text-lg font-semibold text-slate-800">Equipe Alfa 02</p>
-                            </div>
-                            <div class="flex items-center gap-2">
                                 <div class="w-6 h-6 bg-blue-500 rounded"></div>
                                 <p id="totalHoursBravo01_2" class="text-lg font-semibold text-slate-800">Equipe Bravo 01</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <div class="w-6 h-6 bg-emerald-500 rounded"></div>
+                                <p id="totalHoursAlfa02_2" class="text-lg font-semibold text-slate-800">Equipe Alfa 02</p>
                             </div>
                             <div class="flex items-center gap-2">
                                 <div class="w-6 h-6 bg-slate-200 rounded"></div>
@@ -746,20 +752,20 @@
         // Referências para os elementos do CALENDÁRIO 1
         const monthYear1 = document.getElementById('monthYear1');
         const calendarGrid1 = document.getElementById('calendarGrid1');
-        const prevBtn1 = document.getElementById('prevBtn1');
-        const nextBtn1 = document.getElementById('nextBtn1');
         const totalHoursAlfa_1 = document.getElementById('totalHoursAlfa_1');
         const totalHoursBravo_1 = document.getElementById('totalHoursBravo_1');
+        const prevBtn1 = document.getElementById('prevBtn1');
+        const nextBtn1 = document.getElementById('nextBtn1');
 
         // Referências para os elementos do CALENDÁRIO 2
         const monthYear2 = document.getElementById('monthYear2');
         const calendarGrid2 = document.getElementById('calendarGrid2');
-        const prevBtn2 = document.getElementById('prevBtn2');
-        const nextBtn2 = document.getElementById('nextBtn2');
         const totalHoursAlfa01_2 = document.getElementById('totalHoursAlfa01_2');
         const totalHoursAlfa02_2 = document.getElementById('totalHoursAlfa02_2');
         const totalHoursBravo01_2 = document.getElementById('totalHoursBravo01_2');
         const totalHoursBravo02_2 = document.getElementById('totalHoursBravo02_2');
+        const prevBtn2 = document.getElementById('prevBtn2');
+        const nextBtn2 = document.getElementById('nextBtn2');
         
         // Referências para o modal de mensagens
         const messageModal = document.getElementById('messageModal');
@@ -781,9 +787,10 @@
         /**
          * Determina a equipe para um dia específico com base na lógica de rodízio da Escala 24x72.
          * A escala 24x72 funciona em um ciclo de 4 dias de trabalho, com equipes diferentes.
+         * Nova Sequência:
          * Dia 1: Equipe Alfa 01
-         * Dia 2: Equipe Alfa 02
-         * Dia 3: Equipe Bravo 01
+         * Dia 2: Equipe Bravo 01
+         * Dia 3: Equipe Alfa 02
          * Dia 4: Equipe Bravo 02
          * @param {number} day O dia do mês.
          * @returns {string | null} O nome da equipe.
@@ -791,76 +798,53 @@
         function getTeamForDay24x72(day) {
             const cycleDay = (day - 1) % 4;
             if (cycleDay === 0) return "alfa01";
-            if (cycleDay === 1) return "alfa02";
-            if (cycleDay === 2) return "bravo01";
+            if (cycleDay === 1) return "bravo01";
+            if (cycleDay === 2) return "alfa02";
             if (cycleDay === 3) return "bravo02";
             return null;
         }
 
         /**
-         * Calcula e exibe o total de horas trabalhadas para a escala corrigida (12x36).
-         * @param {number} month O mês (0-11).
-         * @param {number} year O ano.
+         * Recalcula e exibe as horas totais para ambos os calendários.
+         * É chamada após cada ação de marcação/desmarcação de um dia.
          */
-        function calculateAndDisplayHoursCorrected(month, year) {
-            let alfaDays = 0;
-            let bravoDays = 0;
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-            const hoursPerDay = 12; // Carga horária de 12 horas por dia
+        function updateTotalHours() {
+            let alfaDays1 = 0;
+            let bravoDays1 = 0;
+            let alfa01Days2 = 0;
+            let alfa02Days2 = 0;
+            let bravo01Days2 = 0;
+            let bravo02Days2 = 0;
 
-            for (let day = 1; day <= daysInMonth; day++) {
-                // Checagem para os dias 9 e 10 de agosto de 2025 (Regras manuais)
-                if (year === 2025 && month === 7 && day === 9) {
-                    alfaDays++;
-                    continue;
+            // Recalcula horas para o CALENDÁRIO 1
+            const days1 = calendarGrid1.querySelectorAll('div[data-team]');
+            days1.forEach(dayEl => {
+                if (!dayEl.classList.contains('unmarked-day')) {
+                    const team = dayEl.dataset.team;
+                    if (team === 'alfa') alfaDays1++;
+                    if (team === 'bravo') bravoDays1++;
                 }
-                if (year === 2025 && month === 7 && day === 10) {
-                    bravoDays++;
-                    continue;
+            });
+
+            // Recalcula horas para o CALENDÁRIO 2
+            const days2 = calendarGrid2.querySelectorAll('div[data-team]');
+            days2.forEach(dayEl => {
+                if (!dayEl.classList.contains('unmarked-day')) {
+                    const team = dayEl.dataset.team;
+                    if (team === 'alfa01') alfa01Days2++;
+                    if (team === 'bravo01') bravo01Days2++;
+                    if (team === 'alfa02') alfa02Days2++;
+                    if (team === 'bravo02') bravo02Days2++;
                 }
-
-                const dayOfWeek = new Date(year, month, day).getDay();
-                // 1 = Segunda, 2 = Terça, 3 = Quarta, 4 = Quinta, 5 = Sexta
-                const isWeekday = dayOfWeek >= 1 && dayOfWeek <= 5;
-
-                if (isWeekday) {
-                    if (day % 2 !== 0) { // Dia ímpar
-                        alfaDays++;
-                    } else { // Dia par
-                        bravoDays++;
-                    }
-                }
-            }
-
-            totalHoursAlfa_1.textContent = `Equipe Alfa: ${alfaDays * hoursPerDay} horas`;
-            totalHoursBravo_1.textContent = `Equipe Bravo: ${bravoDays * hoursPerDay} horas`;
-        }
-        
-        /**
-         * Calcula e exibe o total de horas trabalhadas para cada equipe da escala 24x72.
-         * @param {number} hoursPerDay O número de horas por dia de trabalho.
-         * @param {number} month O mês (0-11).
-         * @param {number} year O ano.
-         */
-        function calculateAndDisplayHours24x72(hoursPerDay, month, year) {
-            let alfa01Days = 0;
-            let alfa02Days = 0;
-            let bravo01Days = 0;
-            let bravo02Days = 0;
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-            for (let day = 1; day <= daysInMonth; day++) {
-                const team = getTeamForDay24x72(day);
-                if (team === "alfa01") alfa01Days++;
-                if (team === "alfa02") alfa02Days++;
-                if (team === "bravo01") bravo01Days++;
-                if (team === "bravo02") bravo02Days++;
-            }
+            });
             
-            totalHoursAlfa01_2.textContent = `Equipe Alfa 01: ${alfa01Days * hoursPerDay} horas`;
-            totalHoursAlfa02_2.textContent = `Equipe Alfa 02: ${alfa02Days * hoursPerDay} horas`;
-            totalHoursBravo01_2.textContent = `Equipe Bravo 01: ${bravo01Days * hoursPerDay} horas`;
-            totalHoursBravo02_2.textContent = `Equipe Bravo 02: ${bravo02Days * hoursPerDay} horas`;
+            totalHoursAlfa_1.textContent = `Equipe Alfa: ${alfaDays1 * 12} horas`;
+            totalHoursBravo_1.textContent = `Equipe Bravo: ${bravoDays1 * 12} horas`;
+
+            totalHoursAlfa01_2.textContent = `Equipe Alfa 01: ${alfa01Days2 * 24} horas`;
+            totalHoursBravo01_2.textContent = `Equipe Bravo 01: ${bravo01Days2 * 24} horas`;
+            totalHoursAlfa02_2.textContent = `Equipe Alfa 02: ${alfa02Days2 * 24} horas`;
+            totalHoursBravo02_2.textContent = `Equipe Bravo 02: ${bravo02Days2 * 24} horas`;
         }
 
 
@@ -915,47 +899,82 @@
                     team = getTeamForDay24x72(day);
                 }
 
-                if (isCorrectedScale) {
-                    if (team === "alfa") {
-                        dayEl.classList.add("bg-yellow-500", "text-slate-900", "font-bold", "hover:bg-yellow-600");
-                    } else if (team === "bravo") {
-                        dayEl.classList.add("bg-blue-500", "text-white", "font-bold", "hover:bg-blue-600");
+                // Adiciona a classe e o atributo de dados se for um dia de serviço
+                if (team) {
+                    dayEl.classList.add("service-day");
+                    dayEl.dataset.team = team;
+
+                    if (isCorrectedScale) {
+                        dayEl.dataset.originalClasses = `bg-${team === 'alfa' ? 'yellow-500' : 'blue-500'} text-${team === 'alfa' ? 'slate-900' : 'white'} font-bold hover:bg-${team === 'alfa' ? 'yellow-600' : 'blue-600'}`;
                     } else {
-                        dayEl.classList.add("bg-slate-200", "hover:bg-slate-300");
+                         const teamColorMap = {
+                            'alfa01': 'bg-yellow-500 text-slate-900 font-bold hover:bg-yellow-600',
+                            'bravo01': 'bg-blue-500 text-white font-bold hover:bg-blue-600',
+                            'alfa02': 'bg-emerald-500 text-white font-bold hover:bg-emerald-600',
+                            'bravo02': 'bg-slate-200 text-slate-900 font-bold hover:bg-slate-300'
+                        };
+                        dayEl.dataset.originalClasses = teamColorMap[team];
                     }
+                     dayEl.className += ' ' + dayEl.dataset.originalClasses;
                 } else {
-                    // Lógica de cores para a escala 24x72 conforme a nova regra
-                    if (team === "alfa01") {
-                        dayEl.classList.add("bg-yellow-500", "text-slate-900", "font-bold", "hover:bg-yellow-600");
-                    } else if (team === "alfa02") {
-                        dayEl.classList.add("bg-emerald-500", "text-white", "font-bold", "hover:bg-emerald-600");
-                    } else if (team === "bravo01") {
-                        dayEl.classList.add("bg-blue-500", "text-white", "font-bold", "hover:bg-blue-600");
-                    } else if (team === "bravo02") {
-                        dayEl.classList.add("bg-slate-200", "text-slate-900", "font-bold", "hover:bg-slate-300");
-                    }
+                    dayEl.classList.add("bg-slate-200", "hover:bg-slate-300");
                 }
                 
                 dayEl.classList.add("p-2", "rounded-xl", "cursor-pointer", "transition-colors", "duration-200");
                 
-                dayEl.addEventListener('click', () => {
-                    let title = "Dia de Folga";
-                    let message = `O dia ${day} de ${months[month]} de ${year} é um dia de folga.`;
+                // Refatora o event listener para clique duplo
+                dayEl.addEventListener('dblclick', () => {
                     if (isCorrectedScale) {
-                        if (team === 'alfa') {
-                            title = 'Dia de Serviço (Equipe Alfa)';
-                            message = `O dia ${day} de ${months[month]} de ${year} é um dia de serviço da Equipe Alfa (12h de trabalho).`;
-                        } else if (team === 'bravo') {
-                             title = 'Dia de Serviço (Equipe Bravo)';
-                             message = `O dia ${day} de ${months[month]} de ${year} é um dia de serviço da Equipe Bravo (12h de trabalho).`;
+                        // Lógica para o primeiro calendário
+                        if (dayEl.classList.contains('service-day')) {
+                            let title, message;
+                            // Se o dia já tinha a cor original, desmarca-o e aplica a cor 'unmarked'
+                            if (!dayEl.classList.contains('unmarked-day')) {
+                                dayEl.classList.add('unmarked-day');
+                                dayEl.classList.remove(...dayEl.dataset.originalClasses.split(' '));
+                                title = "Dia Desmarcado";
+                                message = `O dia ${day} de ${months[month]} de ${year} foi desmarcado. As horas foram removidas do total da equipe.`;
+                            } else {
+                                // Se o dia já estava desmarcado, reverte para a cor original
+                                dayEl.classList.remove('unmarked-day');
+                                dayEl.classList.add(...dayEl.dataset.originalClasses.split(' '));
+                                title = "Dia Marcado";
+                                message = `O dia ${day} de ${months[month]} de ${year} foi marcado novamente. As horas foram adicionadas de volta.`;
+                            }
+                            showMessage(title, message);
+                        } else {
+                            // Se é um dia de folga, marca o dia
+                            const newTeam = day % 2 !== 0 ? 'alfa' : 'bravo';
+                            const newClasses = newTeam === 'alfa' ? `bg-yellow-500 text-slate-900 font-bold hover:bg-yellow-600` : `bg-blue-500 text-white font-bold hover:bg-blue-600`;
+                            
+                            dayEl.classList.add("service-day", ...newClasses.split(' '));
+                            dayEl.dataset.team = newTeam;
+                            dayEl.dataset.originalClasses = newClasses;
+
+                            // Remove as classes de folga antes de marcar
+                            dayEl.classList.remove("bg-slate-200", "hover:bg-slate-300");
+                            
+                            showMessage("Dia Adicionado", `O dia ${day} de ${months[month]} de ${year} foi adicionado como dia de serviço para a Equipe ${newTeam === 'alfa' ? 'Alfa' : 'Bravo'}.`);
                         }
                     } else {
-                        if (team) {
-                            title = `Dia de Serviço (Equipe ${team.toUpperCase().replace('0',' 0')})`;
-                            message = `O dia ${day} de ${months[month]} de ${year} é um dia de serviço agendado na escala da Equipe ${team.toUpperCase().replace('0',' 0')}.`;
+                        // Lógica para o segundo calendário (mantida)
+                        if (dayEl.classList.contains('service-day')) {
+                            let title, message;
+                            if (dayEl.classList.toggle('unmarked-day')) {
+                                dayEl.classList.remove(...dayEl.dataset.originalClasses.split(' '));
+                                title = "Dia Desmarcado";
+                                message = `O dia ${day} de ${months[month]} de ${year} foi desmarcado. As horas foram removidas do total da equipe.`;
+                            } else {
+                                dayEl.classList.add(...dayEl.dataset.originalClasses.split(' '));
+                                title = "Dia Marcado";
+                                message = `O dia ${day} de ${months[month]} de ${year} foi marcado novamente. As horas foram adicionadas de volta.`;
+                            }
+                            showMessage(title, message);
+                        } else {
+                            showMessage("Dia de Folga", `O dia ${day} de ${months[month]} de ${year} é um dia de folga e não pode ser desmarcado.`);
                         }
                     }
-                    showMessage(title, message);
+                    updateTotalHours();
                 });
 
                 calendarGrid.appendChild(dayEl);
@@ -991,7 +1010,7 @@
             currentYear1 = currentDate1.getFullYear();
             currentMonth1 = currentDate1.getMonth();
             generateCalendar(currentMonth1, currentYear1, 'calendarGrid1', 'monthYear1', true);
-            calculateAndDisplayHoursCorrected(currentMonth1, currentYear1);
+            updateTotalHours(); // Chama a função de atualização de horas
         }
 
         // Funções para gerenciar a navegação do CALENDÁRIO 2
@@ -1000,7 +1019,7 @@
             currentYear2 = currentDate2.getFullYear();
             currentMonth2 = currentDate2.getMonth();
             generateCalendar(currentMonth2, currentYear2, 'calendarGrid2', 'monthYear2', false);
-            calculateAndDisplayHours24x72(24, currentMonth2, currentYear2);
+            updateTotalHours(); // Chama a função de atualização de horas
         }
 
         // Event listeners para os botões de navegação
@@ -1011,10 +1030,8 @@
 
         // Gera os calendários iniciais
         generateCalendar(currentMonth1, currentYear1, 'calendarGrid1', 'monthYear1', true);
-        calculateAndDisplayHoursCorrected(currentMonth1, currentYear1);
-
         generateCalendar(currentMonth2, currentYear2, 'calendarGrid2', 'monthYear2', false);
-        calculateAndDisplayHours24x72(24, currentMonth2, currentYear2);
+        updateTotalHours(); // Chama a função inicial de atualização de horas
     </script>
 </body>
 </html>
