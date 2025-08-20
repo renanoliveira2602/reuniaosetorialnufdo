@@ -114,7 +114,8 @@
         }
     </style>
 </head>
-<body class="text-slate-800">
+<!-- A correção foi feita aqui, usando flexbox para empurrar o rodapé para o final da página -->
+<body class="text-slate-800 min-h-screen flex flex-col">
 
     <!-- Cabeçalho principal da aplicação, fixo no topo e com sombra para elevação -->
     <header class="main-header shadow-sm sticky top-0 z-10">
@@ -124,8 +125,8 @@
         </div>
     </header>
 
-    <!-- Conteúdo principal, com espaçamento responsivo -->
-    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+    <!-- Conteúdo principal, com espaçamento responsivo. Adicionei a classe flex-grow para que este elemento se expanda e empurre o rodapé para baixo. -->
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 flex-grow">
 
         <!-- Página Inicial: Seleção de Normativa -->
         <section id="home-page" class="page active text-center">
